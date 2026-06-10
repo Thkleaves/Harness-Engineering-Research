@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "score": 100,
+  "maxScore": 100,
+  "compile": "true",
+  "tests": {
+    "total": 4,
+    "passed": 4,
+    "failures": 0,
+    "errors": 0
+  },
+  "taskScore": 60,
+  "qualityScore": 15
+}
