@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"debug-flow","traceId":"debug-flow-false-done","case":"bad-false-done","event":"completion_claim","taskId":"debug-flow-example","failureClass":"false-done","expectedBlock":"task-evidence","evidence":["claimed fixed after reading logs only"]}

@@ -1,0 +1,11 @@
+server:
+  port: 8080                   # 服务端口
+
+spring:
+  application:
+    name: book-api              # 应用名称
+
+# 自定义配置
+book:
+  currency: CNY                 # 价格币种
+  default-page-size: 20         # 分页默认大小

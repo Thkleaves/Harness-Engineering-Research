@@ -1,0 +1,24 @@
+# Maven
+target/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+!.vscode/settings.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Workspace git repos
+workspaces/*/.git/
+
+# 评测运行时产物
+eval/tmp/
+eval/results/
+
+# Logs
+*.log

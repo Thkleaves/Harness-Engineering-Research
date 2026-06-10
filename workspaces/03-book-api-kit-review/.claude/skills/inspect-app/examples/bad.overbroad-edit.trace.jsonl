@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"inspect-app","traceId":"inspect-app-overbroad-edit","case":"bad-overbroad-edit","event":"mutation_attempt","taskId":"inspect-app-example","failureClass":"permission-gap","expectedBlock":"skill-permission-guard","evidence":["inspect-app requested Edit during read-only app mapping"]}

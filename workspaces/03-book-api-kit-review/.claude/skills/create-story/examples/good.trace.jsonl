@@ -1,0 +1,3 @@
+{"schemaVersion":1,"skill":"create-story","traceId":"create-story-good","case":"good","event":"story_created","taskId":"create-story-example","expectedOutcome":"pass","evidence":["storyPath","taskContractPath","acceptance"]}
+{"schemaVersion":1,"skill":"create-story","traceId":"create-story-good","case":"good","event":"feature_list_updated","taskId":"create-story-example","expectedOutcome":"pass","evidence":["passes:false","evidencePath"]}
+{"schemaVersion":1,"skill":"create-story","traceId":"create-story-good","case":"good","event":"high_risk_controls_checked","taskId":"create-story-example","expectedOutcome":"pass","evidence":["permissions.allow","scope.allowedLayers"]}

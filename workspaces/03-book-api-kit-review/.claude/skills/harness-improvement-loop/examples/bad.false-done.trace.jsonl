@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"harness-improvement-loop","traceId":"harness-improvement-loop-false-done","case":"bad-false-done","event":"improvement_claim","taskId":"harness-improvement-loop-example","failureClass":"false-done","expectedBlock":"failure-records","evidence":["failure marked applied without verification command"]}

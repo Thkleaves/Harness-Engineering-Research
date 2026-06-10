@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "skill": "add-feature",
+  "case": "good",
+  "taskId": "add-feature-example",
+  "featureId": "add-feature-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    "src/service/example.ts",
+    ".harness/evidence/add-feature-example.json"
+  ],
+  "diffSummary": "Implemented a scoped feature and recorded passing focused verification evidence.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=add-feature",
+      "status": "pass",
+      "summary": "Add-feature example trace and evidence validated."
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+# 任务③：列表 API 加分页和排序
+# L2 中等 / 3-5 步 / ★ PILOT 任务
+
+description: "L2-03 (PILOT): 列表 API 添加分页和排序"
+
+vars:
+  task_id: "03-pagination"
+  level: L2
+  pilot: true
+  task: |
+    现有 GET /api/users 返回所有用户，无分页无排序。
+
+    请完成以下需求：
+    1. 添加分页参数 page, size（默认 page=0, size=20, 最大 size=100）
+    2. 添加排序参数 sort（支持 username, email, age，默认 id,asc）
+    3. 返回 Page<UserSummary>（不暴露 password 字段 — 防信息泄露）
+    4. 排序字段白名单过滤（只允许 username/email/age/id — 防止排序注入）
+    5. 响应 JSON 包含 totalPages, totalElements, page, size 元数据
+    6. 编写 Controller、Service、Repository 三层测试
+    7. 验证：排序注入防御（?sort=password 应被拒绝或忽略）
+
+  workspace: workspaces/03-pagination
+
+  checks:
+    compile: mvn compile -q
+    test: mvn test
+    whitelist:
+      - grep -i "whitelist\|ALLOWED_SORT\|allowedSort\|SORTABLE" src/main --include="*.java" -l
+    no_password_in_response:
+      - grep "password" src/main --include="*Summary*" -l || true
+
+assert:
+  # 编译通过
+  - type: exec
+    value: mvn compile -q
+
+  # 分页参数在 Controller 中
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*Controller*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return content.includes('page') && content.includes('size');
+
+  # 排序白名单存在
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return /whitelist|ALLOWED|allowedSort|SORTABLE|sortable/i.test(content);
+
+  # 三层都有测试
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const testFiles = require('glob').sync('src/test/**/*.java');
+      const content = testFiles.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return content.includes('@Test') && testFiles.length >= 3;
+
+  # UserSummary 不暴露 password 字段
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const summaryFiles = require('glob').sync('src/main/**/*Summary*.java');
+      if (summaryFiles.length === 0) return true; // 可能用其他方式
+      return !summaryFiles.some(f => fs.readFileSync(f, 'utf8').includes('password'));

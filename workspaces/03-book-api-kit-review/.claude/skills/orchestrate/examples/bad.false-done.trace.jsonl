@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"orchestrate","traceId":"orchestrate-false-done","case":"bad-false-done","event":"synthesis_claim","taskId":"orchestrate-example","failureClass":"false-done","expectedBlock":"orchestration-contracts","evidence":["manifest missing task binding"]}

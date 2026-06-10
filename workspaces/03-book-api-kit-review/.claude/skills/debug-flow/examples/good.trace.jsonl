@@ -1,0 +1,3 @@
+{"schemaVersion":1,"skill":"debug-flow","traceId":"debug-flow-good","case":"good","event":"reproduction_captured","taskId":"debug-flow-example","expectedOutcome":"pass","evidence":["error","steps","environment"]}
+{"schemaVersion":1,"skill":"debug-flow","traceId":"debug-flow-good","case":"good","event":"hypothesis_tested","taskId":"debug-flow-example","expectedOutcome":"pass","evidence":["narrow check before edit"]}
+{"schemaVersion":1,"skill":"debug-flow","traceId":"debug-flow-good","case":"good","event":"regression_guard_added","taskId":"debug-flow-example","expectedOutcome":"pass","evidence":["focused failing test now passes"]}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "skill": "create-story",
+  "case": "good",
+  "taskId": "create-story-example",
+  "featureId": "create-story-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    ".harness/feature_list.json",
+    ".harness/task-contracts/create-story-example.json"
+  ],
+  "diffSummary": "Created a story packet, task contract, and feature-list entry without marking work complete.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=create-story",
+      "status": "pass",
+      "summary": "Create-story example trace and evidence validated."
+    }
+  ]
+}

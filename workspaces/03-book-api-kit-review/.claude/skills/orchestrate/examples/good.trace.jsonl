@@ -1,0 +1,3 @@
+{"schemaVersion":1,"skill":"orchestrate","traceId":"orchestrate-good","case":"good","event":"contract_loaded","taskId":"orchestrate-example","expectedOutcome":"pass","evidence":["lanes","toolPolicy","outputs"]}
+{"schemaVersion":1,"skill":"orchestrate","traceId":"orchestrate-good","case":"good","event":"lanes_completed","taskId":"orchestrate-example","expectedOutcome":"pass","evidence":["manifest","transcripts","cost"]}
+{"schemaVersion":1,"skill":"orchestrate","traceId":"orchestrate-good","case":"good","event":"run_bound_to_task","taskId":"orchestrate-example","expectedOutcome":"pass","evidence":["taskId","contractId","outputDir"]}

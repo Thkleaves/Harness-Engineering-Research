@@ -1,0 +1,63 @@
+# 任务①：为 DTO 添加 Validation 注解
+# L1 简单 / 1-2 步
+
+description: "L1-01: 为 UserCreateRequest DTO 添加 Jakarta Validation 注解"
+
+vars:
+  task_id: "01-validation"
+  level: L1
+  task: |
+    现有 UserCreateRequest DTO 没有任何校验注解。
+
+    请完成以下需求：
+    1. 为 username 添加 @NotBlank + @Size(min=3, max=50) + @Pattern(regexp="^[a-zA-Z0-9]+$")
+    2. 为 email 添加 @NotBlank + @Email
+    3. 为 password 添加 @NotBlank + @Size(min=8) + @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")
+    4. 为 age 添加 @NotNull + @Min(18) + @Max(120)
+    5. Controller 的 @RequestBody 参数加 @Valid
+    6. 添加 GlobalExceptionHandler 统一返回 400 + 结构化错误信息（包含字段名和错误原因）
+    7. 编写测试验证合法输入和非法输入
+
+  workspace: workspaces/01-validation
+
+  # ── 验收标准 ──
+  checks:
+    compile: mvn compile -q
+    test: mvn test
+    security: grep -r "password" src/main --include="*.java" | grep -v "//\|test"
+    validation:
+      - grep "@Valid" src/main --include="*.java"
+      - grep "@NotBlank" src/main --include="*.java"
+      - grep "@Email" src/main --include="*.java"
+      - grep "GlobalExceptionHandler\|ControllerAdvice" src/main --include="*.java" -l
+
+assert:
+  # 编译通过
+  - type: exec
+    value: mvn compile -q
+    timeout: 60000
+
+  # 测试通过率 ≥ 80%
+  - type: exec
+    value: |
+      mvn test 2>&1 | tail -20
+      python3 -c "
+      import subprocess, sys
+      result = subprocess.run(['mvn', 'test'], capture_output=True, text=True)
+      # 检查 BUILD SUCCESS
+      if 'BUILD SUCCESS' in result.stdout:
+          print('TEST_PASS')
+      else:
+          print('TEST_FAIL')
+      "
+
+  # @Valid 必须出现在 Controller 中
+  - type: contains
+    value: "@Valid"
+
+  # 必须有 GlobalExceptionHandler 或 @ControllerAdvice
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      return files.some(f => fs.readFileSync(f, 'utf8').includes('ControllerAdvice') || fs.readFileSync(f, 'utf8').includes('ExceptionHandler'));

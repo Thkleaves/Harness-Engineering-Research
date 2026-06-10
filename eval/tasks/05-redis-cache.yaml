@@ -1,0 +1,60 @@
+# 任务⑤：Redis 缓存层注入
+# L2 中等 / 3-5 步
+
+description: "L2-05: Redis 缓存层注入"
+
+vars:
+  task_id: "05-redis-cache"
+  level: L2
+  task: |
+    现有 GET /api/products/{id} 每次查内存 Map，响应慢。
+
+    请完成以下需求：
+    1. 添加 spring-boot-starter-cache + spring-boot-starter-data-redis 依赖
+    2. 启用缓存：在 Application 类上加 @EnableCaching
+    3. 在 ProductService.findById 方法上加 @Cacheable(value="products", key="#id")
+    4. 在 ProductService.update 方法上加 @CachePut 或 @CacheEvict
+    5. 在 ProductService.delete 方法上加 @CacheEvict
+    6. 缓存 TTL 可通过 application.yml 配置（spring.cache.redis.time-to-live）
+    7. 编写测试验证缓存行为（测试不需要真实 Redis，用 mock 或 @TestConfiguration）
+
+  workspace: workspaces/05-redis-cache
+
+  checks:
+    compile: mvn compile -q
+    test: mvn test
+    cache_deps:
+      - grep "spring-boot-starter-cache" pom.xml
+      - grep "spring-boot-starter-data-redis" pom.xml
+    cache_annotations:
+      - grep "@Cacheable" src/main --include="*.java" -l
+      - grep "@EnableCaching" src/main --include="*.java" -l
+      - grep "@CacheEvict\|@CachePut" src/main --include="*.java" -l
+
+assert:
+  # 编译通过
+  - type: exec
+    value: mvn compile -q
+
+  # 缓存依赖已添加
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const pom = fs.readFileSync('pom.xml', 'utf8');
+      return pom.includes('spring-boot-starter-cache') && pom.includes('spring-boot-starter-data-redis');
+
+  # @Cacheable 和 @CacheEvict 都存在
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return content.includes('@Cacheable') && (content.includes('@CacheEvict') || content.includes('@CachePut'));
+
+  # 有缓存相关测试
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const testFiles = require('glob').sync('src/test/**/*.java');
+      const content = testFiles.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return /cache|Cache|缓存/.test(content);

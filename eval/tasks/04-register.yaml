@@ -1,0 +1,66 @@
+# 任务④：用户注册 + 邮箱验证
+# L2 中等 / 3-5 步
+
+description: "L2-04: 用户注册 + 邮箱验证流程"
+
+vars:
+  task_id: "04-register"
+  level: L2
+  task: |
+    现有 User 实体和基本 CRUD，没有注册流程。
+
+    请完成以下需求：
+    1. POST /api/auth/register — 创建用户，状态设为 UNVERIFIED（不是 ACTIVE）
+    2. 生成验证 Token（UUID），保存到用户记录
+    3. "发送验证邮件"时打印 log（不需要真实邮件服务）
+    4. GET /api/auth/verify?token=xxx — 验证邮箱，将用户状态改为 ACTIVE
+    5. POST /api/auth/login — 登录时检查用户状态，拒绝 UNVERIFIED 用户
+    6. Token 有过期机制（24 小时过期）
+    7. 编写测试覆盖：正常注册→验证→登录、Token 过期、未验证登录被拒、重复验证
+
+  workspace: workspaces/04-register
+
+  checks:
+    compile: mvn compile -q
+    test: mvn test
+    auth_endpoints:
+      - grep "api/auth/register" src/main --include="*.java" -l
+      - grep "api/auth/verify" src/main --include="*.java" -l
+      - grep "api/auth/login" src/main --include="*.java" -l
+
+assert:
+  # 编译通过
+  - type: exec
+    value: mvn compile -q
+
+  # 三个认证端点都存在
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return content.includes('register') && content.includes('verify') && content.includes('login');
+
+  # 有 UNVERIFIED 状态检查
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      return files.some(f => fs.readFileSync(f, 'utf8').includes('UNVERIFIED'));
+
+  # Token 有过期逻辑
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return /expir|过期|24.*hour|plus.*hour/i.test(content);
+
+  # 测试覆盖 ≥ 3 个场景
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const testFiles = require('glob').sync('src/test/**/*.java');
+      const content = testFiles.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      const testCount = (content.match(/@Test/g) || []).length;
+      return testCount >= 3;

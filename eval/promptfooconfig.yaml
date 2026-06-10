@@ -1,0 +1,117 @@
+# ============================================================
+# promptfooconfig.yaml — Harness Engineering 评测主配置
+# 4 组 Harness × 12 任务 × N 次重复
+# ============================================================
+
+description: "Harness Engineering Evaluation — Spring Boot 12 Tasks × 4 Harness Groups"
+
+# ── Provider 定义 ──
+# 每组对应不同的 skill 注入策略，模型和基础配置完全一致
+
+providers:
+  # ── A. 对照组：裸 Agent，无 Skill 注入 ──
+  - id: exec
+    label: baseline
+    config:
+      command: bash
+      args:
+        - ./scripts/run-provider.sh
+        - baseline
+        - "{{task_id}}"
+        - "{{task_prompt}}"
+        - "{{workspace}}"
+      env:
+        PROVIDER_LABEL: baseline
+        MODEL: deepseek-v4-pro
+        SKILLS: ""                           # 无 skills
+
+  # ── B. Superpowers：注入全部 14 个技能 ──
+  - id: exec
+    label: superpowers
+    config:
+      command: bash
+      args:
+        - ./scripts/run-provider.sh
+        - superpowers
+        - "{{task_id}}"
+        - "{{task_prompt}}"
+        - "{{workspace}}"
+      env:
+        PROVIDER_LABEL: superpowers
+        MODEL: deepseek-v4-pro
+        SKILLS: superpowers                  # 注入 superpowers 技能集
+
+  # ── C. Gstack：注入角色分工技能 ──
+  - id: exec
+    label: gstack
+    config:
+      command: bash
+      args:
+        - ./scripts/run-provider.sh
+        - gstack
+        - "{{task_id}}"
+        - "{{task_prompt}}"
+        - "{{workspace}}"
+      env:
+        PROVIDER_LABEL: gstack
+        MODEL: deepseek-v4-pro
+        SKILLS: "gstack/ceo,gstack/engineer,gstack/qa,gstack/devops"
+
+  # ── D. OpenSpec：注入 Spec 驱动工作流 ──
+  - id: exec
+    label: openspec
+    config:
+      command: bash
+      args:
+        - ./scripts/run-provider.sh
+        - openspec
+        - "{{task_id}}"
+        - "{{task_prompt}}"
+        - "{{workspace}}"
+      env:
+        PROVIDER_LABEL: openspec
+        MODEL: deepseek-v4-pro
+        SKILLS: openspec
+
+# ── 全局 Prompt ──
+defaultTest:
+  assert:
+    # 编译必须通过
+    - type: contains-json
+      value:
+        required: [pass]
+      weight: 0
+
+  options:
+    # 每个 Provider 独立工作区
+    transformVars: |
+      return {
+        ...vars,
+        provider_workspace: `./tmp/${vars.task_id}-${provider.label}`
+      };
+
+# ── 评测数据集 ──
+# 引入外部任务定义文件
+tests:
+  # ── L1 简单任务 ──
+  - path: tasks/01-validation.yaml
+  - path: tasks/02-actuator.yaml
+
+  # ── L2 中等任务 ──
+  - path: tasks/03-pagination.yaml
+  - path: tasks/04-register.yaml
+  - path: tasks/05-redis-cache.yaml
+  - path: tasks/06-ratelimit.yaml
+
+  # ── L3 复杂任务 (Day 3) ──
+  # - path: tasks/07-jwt-auth.yaml
+  # - path: tasks/08-refactor-layers.yaml
+  # - path: tasks/09-file-upload.yaml
+  # - path: tasks/10-nplusone-fix.yaml
+
+  # ── L4 高级任务 (Day 3) ──
+  # - path: tasks/11-concurrent-booking.yaml
+  # - path: tasks/12-flaky-test.yaml
+
+# ── 输出配置 ──
+outputPath: results/eval-results.json

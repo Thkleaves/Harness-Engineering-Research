@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "harness_version": "0.2.2",
+  "entries": [
+    {
+      "path": ".harness\\profile.yaml",
+      "sha256": "4cfcf749b50e85e04c19fef519fec37dec619b6b28323268bf0e0a8c57080b27",
+      "bytes": 1901,
+      "written_by": "harness:profile"
+    },
+    {
+      "path": ".claude\\CLAUDE.md",
+      "sha256": "bebdc1d4f6222eecec48e38f1c21ae01c26e69809e0aeaf28b12bf7fe6aa9b7d",
+      "bytes": 1547,
+      "written_by": "adapter:claude-code"
+    },
+    {
+      "path": ".cursor\\rules",
+      "sha256": "4b6a4b89b3a43975504623d60bae6af53ebf5e0464cdc9d6dde92840f316c30e",
+      "bytes": 947,
+      "written_by": "adapter:cursor"
+    },
+    {
+      "path": ".continue\\config.json",
+      "sha256": "88ffed99db632ac2c00f7d370def388bdda6ce8a87850e12be72ca975d63e2b2",
+      "bytes": 1154,
+      "written_by": "adapter:continue"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "2b5ef45459545e545e3dcd5534c107a51e6b8b6d92d62992ecaa58537af919d9",
+      "bytes": 2014,
+      "written_by": "blueprint:workflow-agent"
+    },
+    {
+      "path": ".windsurf\\rules",
+      "sha256": "b82fc357fa35310f53240a38453c89e260324e24109c4a7660a873a3d5f2d9ef",
+      "bytes": 1271,
+      "written_by": "adapter:windsurf"
+    },
+    {
+      "path": "SOUL.md",
+      "sha256": "22476193983aaf654e0855d7e67747f2922e1c798235634fa178386dc9992df9",
+      "bytes": 1105,
+      "written_by": "blueprint:workflow-agent"
+    },
+    {
+      "path": "TOOLS.md",
+      "sha256": "3f9bc948c11cfe10c24c5946429e2b4a8d430def47f2eeb51c0096a785112afc",
+      "bytes": 1027,
+      "written_by": "blueprint:workflow-agent"
+    },
+    {
+      "path": "MEMORY.md",
+      "sha256": "80e251e6b0df6f2a02dc62caa4bfa2b49adeb211ced7d7690adec8ce67cabac5",
+      "bytes": 1117,
+      "written_by": "blueprint:workflow-agent"
+    },
+    {
+      "path": "scripts\\test_task.sh",
+      "sha256": "a6aab2a95e872df986b0d51227508f9b42c3c99a2dfe8676ef2efe2f6a00acf5",
+      "bytes": 573,
+      "written_by": "blueprint:workflow-agent"
+    },
+    {
+      "path": "scripts\\verify_output.py",
+      "sha256": "9a17ce08b6e6cf28b4fb82ca0178cbfb7baf94a50484f8fb7e0e72b634826fb9",
+      "bytes": 1616,
+      "written_by": "blueprint:workflow-agent"
+    },
+    {
+      "path": "SKILLS\\decompose-task\\SKILL.md",
+      "sha256": "20b8dc57f85c0f242cf7c1354c2a232abfe1266dc92cec2882ff920e69038adf",
+      "bytes": 1497,
+      "written_by": "blueprint:workflow-agent:skills"
+    },
+    {
+      "path": "SKILLS\\call-tool-with-retry\\SKILL.md",
+      "sha256": "64ae63bfaf9faebacad3edba1b9a93a42503bf0b65b02b99c3ab4f566af0cb03",
+      "bytes": 1630,
+      "written_by": "blueprint:workflow-agent:skills"
+    },
+    {
+      "path": "SKILLS\\check-result\\SKILL.md",
+      "sha256": "03b2202c91c178127282b7bb862ab39f3d9f86753069e71cdafdd9d91ea958db",
+      "bytes": 1407,
+      "written_by": "blueprint:workflow-agent:skills"
+    },
+    {
+      "path": ".harness\\memory_schemas\\conversation.json",
+      "sha256": "5bb862727b9d54ad8de0972628b8583cda1adcef24f5bbefbf96f6d8a1758a53",
+      "bytes": 1453,
+      "written_by": "blueprint:workflow-agent:memory_schemas"
+    },
+    {
+      "path": "harness.config.json",
+      "sha256": "93666c8300519b276d740c023225f4d1ad2938ad36623c8721a902a8a1fd83b8",
+      "bytes": 343,
+      "written_by": "harness:config"
+    }
+  ]
+}

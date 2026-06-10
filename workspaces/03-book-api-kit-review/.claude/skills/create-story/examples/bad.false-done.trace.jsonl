@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"create-story","traceId":"create-story-false-done","case":"bad-false-done","event":"feature_marked_pass","taskId":"create-story-example","failureClass":"false-done","expectedBlock":"task-evidence","evidence":["story creation is not implementation evidence"]}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skill": "feature-intake",
+  "case": "good",
+  "taskId": "feature-intake-example",
+  "featureId": "feature-intake-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    ".harness/task-contracts/feature-intake-example.json"
+  ],
+  "diffSummary": "Drafted a scoped task contract with acceptance checks and evidence requirements.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=feature-intake",
+      "status": "pass",
+      "summary": "Feature intake example trace and evidence validated."
+    }
+  ]
+}

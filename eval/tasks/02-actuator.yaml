@@ -1,0 +1,49 @@
+# 任务②：添加 Health + Metrics 端点
+# L1 简单 / 1-2 步
+
+description: "L1-02: 添加 Actuator Health + Metrics 端点"
+
+vars:
+  task_id: "02-actuator"
+  level: L1
+  task: |
+    当前 Spring Boot 应用没有任何 Actuator 配置。
+
+    请完成以下需求：
+    1. 添加 spring-boot-starter-actuator 依赖
+    2. 暴露 /actuator/health 端点（含数据库连接检查 — 可以 stubbed）
+    3. 暴露 /actuator/info 端点（含应用版本和构建时间）
+    4. 自定义 HealthIndicator：/actuator/health/readiness
+    5. 编写集成测试验证端点响应（@SpringBootTest + TestRestTemplate）
+
+  workspace: workspaces/02-actuator
+
+  checks:
+    compile: mvn compile -q
+    test: mvn test
+    actuator:
+      - grep "spring-boot-starter-actuator" pom.xml
+      - grep "HealthIndicator" src/main --include="*.java" -l
+
+assert:
+  # 编译通过
+  - type: exec
+    value: mvn compile -q
+
+  # Actuator 依赖已加
+  - type: contains
+    value: "spring-boot-starter-actuator"
+
+  # 自定义 HealthIndicator 已实现
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      return files.some(f => fs.readFileSync(f, 'utf8').includes('HealthIndicator'));
+
+  # 有集成测试
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const testFiles = require('glob').sync('src/test/**/*.java');
+      return testFiles.some(f => fs.readFileSync(f, 'utf8').includes('TestRestTemplate') || fs.readFileSync(f, 'utf8').includes('actuator'));

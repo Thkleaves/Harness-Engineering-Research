@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "health-endpoint",
+  "type": "feature",
+  "riskTier": "normal",
+  "scope": {
+    "summary": "GET /health returns {status:'ok'}",
+    "goals": [
+      "Implement the health endpoint across the smallest required vertical slice",
+      "Prove the endpoint with a deterministic command"
+    ],
+    "nonGoals": [
+      "Do not redesign unrelated routing or provider setup"
+    ],
+    "allowedLayers": ["types", "config", "repo", "service", "runtime", "ui"]
+  },
+  "acceptance": [
+    {
+      "id": "health-response",
+      "description": "GET /health returns HTTP 200 and a status ok body.",
+      "verification": {
+        "command": "npm test && curl /health"
+      }
+    },
+    {
+      "id": "regression-safety",
+      "description": "Existing routes and startup behavior remain unchanged unless explicitly listed.",
+      "verification": {
+        "command": "npm test"
+      }
+    }
+  ],
+  "requiresAdr": false,
+  "requiredReviewers": [],
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "LS",
+      "Edit",
+      "Write",
+      "Bash(npm test*)",
+      "Bash(git status*)",
+      "Bash(git diff*)"
+    ],
+    "deny": [
+      "Bash(git commit*)",
+      "Bash(git push*)"
+    ]
+  },
+  "doneRequires": ["structural", "tests", "smoke", "evidence-bundle"],
+  "evidencePath": ".harness/evidence/health-endpoint.json"
+}

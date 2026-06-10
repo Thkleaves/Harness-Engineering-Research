@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skill": "debug-flow",
+  "case": "good",
+  "taskId": "debug-flow-example",
+  "featureId": "debug-flow-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    "tests/debug-flow-regression.test.mjs"
+  ],
+  "diffSummary": "Captured a reproduction, tested the root-cause hypothesis, and added a regression guard.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=debug-flow",
+      "status": "pass",
+      "summary": "Debug-flow example trace and evidence validated."
+    }
+  ]
+}

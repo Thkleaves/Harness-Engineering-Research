@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "harness_version": "0.2.2",
+  "blueprint": "workflow-agent",
+  "blueprint_version": "1.0.0",
+  "manifest": ".harness/manifest.json",
+  "profile": ".harness/profile.yaml",
+  "adapters": [
+    "claude-code",
+    "cursor",
+    "continue",
+    "codex-cli",
+    "windsurf"
+  ],
+  "skills_dir": "SKILLS",
+  "extras": {}
+}

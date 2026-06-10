@@ -1,0 +1,21 @@
+{
+  "_generatedBy": "harness v0.2.2",
+  "_source": ".harness/profile.yaml",
+  "systemMessage": "You are working in 04-book-api-forge, a library written in java. Frameworks: none. java project at 04-book-api-forge\n\nConventions: Read the surrounding code before making any edit \u2014 match local conventions. | Prefer editing existing files over creating new ones unless asked.\n\nCommands: \n\nForbidden paths: .env, .env.*, *.pem, *.key, secrets/\nForbidden commands: rm -rf /, rm -rf ~, rm -rf ., git push --force, git push -f, git reset --hard origin/*\nAlways ask before: any git push to main/master | any deploy command | any `rm -rf` of more than one directory\n\nDefinition of done: Code change is small, focused, and readable | Diff is minimal \u2014 touch only files relevant to the task | Commit message explains *why*, not just *what*",
+  "experimental": {
+    "modelContextProtocolServers": [
+      {
+        "transport": "stdio",
+        "name": "filesystem"
+      },
+      {
+        "transport": "stdio",
+        "name": "git"
+      },
+      {
+        "transport": "stdio",
+        "name": "github"
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+{"schemaVersion":1,"skill":"harness-improvement-loop","traceId":"harness-improvement-loop-good","case":"good","event":"failure_record_read","taskId":"harness-improvement-loop-example","expectedOutcome":"pass","evidence":["failureClass","preventionTarget"]}
+{"schemaVersion":1,"skill":"harness-improvement-loop","traceId":"harness-improvement-loop-good","case":"good","event":"prevention_applied","taskId":"harness-improvement-loop-example","expectedOutcome":"pass","evidence":["script","test","docs"]}
+{"schemaVersion":1,"skill":"harness-improvement-loop","traceId":"harness-improvement-loop-good","case":"good","event":"verification_recorded","taskId":"harness-improvement-loop-example","expectedOutcome":"pass","evidence":["check command","failure record status"]}

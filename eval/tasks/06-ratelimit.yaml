@@ -1,0 +1,69 @@
+# 任务⑥：Token Bucket 限流
+# L2 中等 / 3-5 步
+
+description: "L2-06: Token Bucket 限流算法实现"
+
+vars:
+  task_id: "06-ratelimit"
+  level: L2
+  task: |
+    当前 GET /api/users 是公共 API，被过度调用，没有任何限流机制。
+
+    请完成以下需求：
+    1. 实现 Token Bucket 算法（手写，不用第三方限流库）
+    2. 每个用户独立桶（通过 X-User-Id 请求头区分用户）
+    3. 每用户每分钟最多 60 个请求（可通过配置修改）
+    4. 超过限额返回 HTTP 429 Too Many Requests
+    5. 429 响应必须包含 Retry-After 响应头（秒数）
+    6. 桶参数可配置在 application.yml：
+       - rate-limit.capacity: 桶容量
+       - rate-limit.refill-rate: 每秒填充速率
+    7. 线程安全实现（ConcurrentHashMap + 正确的同步）
+    8. 编写并发测试验证限流正常工作
+
+  workspace: workspaces/06-ratelimit
+
+  checks:
+    compile: mvn compile -q
+    test: mvn test
+    rate_limit_code:
+      - grep -i "token.*bucket\|TokenBucket\|rate.*limit\|RateLimiter" src/main --include="*.java" -l
+    http_429:
+      - grep "429\|Too Many Requests\|TOO_MANY_REQUESTS" src/main --include="*.java" -l
+
+assert:
+  # 编译通过
+  - type: exec
+    value: mvn compile -q
+
+  # Token Bucket 实现存在
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return /token.*bucket|TokenBucket|rate.*limit/i.test(content);
+
+  # 返回 429 状态码
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return content.includes('429') || content.includes('TOO_MANY_REQUESTS') || content.includes('Too Many Requests');
+
+  # 线程安全（ConcurrentHashMap）
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const files = require('glob').sync('src/main/**/*.java');
+      const content = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return content.includes('ConcurrentHashMap') || content.includes('synchronized') || content.includes('ReentrantLock');
+
+  # 有并发测试
+  - type: javascript
+    value: |
+      const fs = require('fs');
+      const testFiles = require('glob').sync('src/test/**/*.java');
+      const content = testFiles.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return /concurrent|并发|thread|Thread|ExecutorService|CountDownLatch/i.test(content);

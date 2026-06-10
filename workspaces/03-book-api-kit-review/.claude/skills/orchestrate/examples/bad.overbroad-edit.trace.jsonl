@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"orchestrate","traceId":"orchestrate-overbroad-edit","case":"bad-overbroad-edit","event":"lane_policy_violation","taskId":"orchestrate-example","failureClass":"permission-gap","expectedBlock":"orchestration-contracts","evidence":["read-only lane attempted mutating tool"]}

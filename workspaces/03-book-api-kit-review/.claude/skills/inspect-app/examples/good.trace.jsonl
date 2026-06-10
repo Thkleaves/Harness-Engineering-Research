@@ -1,0 +1,3 @@
+{"schemaVersion":1,"skill":"inspect-app","traceId":"inspect-app-good","case":"good","event":"entrypoints_mapped","taskId":"inspect-app-example","expectedOutcome":"pass","evidence":["package scripts","routes","domains"]}
+{"schemaVersion":1,"skill":"inspect-app","traceId":"inspect-app-good","case":"good","event":"risk_surface_summarized","taskId":"inspect-app-example","expectedOutcome":"pass","evidence":["auth","data","ui","runtime"]}
+{"schemaVersion":1,"skill":"inspect-app","traceId":"inspect-app-good","case":"good","event":"no_mutation_performed","taskId":"inspect-app-example","expectedOutcome":"pass","evidence":["read-only inspection"]}

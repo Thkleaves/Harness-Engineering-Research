@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skill": "verify-ui",
+  "case": "good",
+  "taskId": "verify-ui-example",
+  "featureId": "verify-ui-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    ".harness/evidence/verify-ui-example/verify-ui.json"
+  ],
+  "diffSummary": "Verified the UI path with a repo-local artifact and attached it to task evidence.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=verify-ui",
+      "status": "pass",
+      "summary": "Verify-ui example trace and evidence validated."
+    }
+  ]
+}

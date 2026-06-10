@@ -1,0 +1,3 @@
+{"schemaVersion":1,"skill":"verify-ui","traceId":"verify-ui-good","case":"good","event":"browser_check_started","taskId":"verify-ui-example","expectedOutcome":"pass","evidence":["route","viewport","assertions"]}
+{"schemaVersion":1,"skill":"verify-ui","traceId":"verify-ui-good","case":"good","event":"artifact_written","taskId":"verify-ui-example","expectedOutcome":"pass","evidence":["verify-ui.json","screenshot"]}
+{"schemaVersion":1,"skill":"verify-ui","traceId":"verify-ui-good","case":"good","event":"ui_evidence_attached","taskId":"verify-ui-example","expectedOutcome":"pass","evidence":["artifact path repo-local"]}

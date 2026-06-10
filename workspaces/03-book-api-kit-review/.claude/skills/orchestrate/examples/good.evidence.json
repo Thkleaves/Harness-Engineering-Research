@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skill": "orchestrate",
+  "case": "good",
+  "taskId": "orchestrate-example",
+  "featureId": "orchestrate-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    ".harness/orchestration/runs/orchestrate-example/manifest.json"
+  ],
+  "diffSummary": "Ran task-bound orchestration lanes and preserved manifest, transcript, and cost evidence.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=orchestrate",
+      "status": "pass",
+      "summary": "Orchestrate example trace and evidence validated."
+    }
+  ]
+}

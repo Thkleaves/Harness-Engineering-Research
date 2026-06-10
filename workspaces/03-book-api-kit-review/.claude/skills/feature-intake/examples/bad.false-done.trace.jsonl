@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"feature-intake","traceId":"feature-intake-false-done","case":"bad-false-done","event":"completion_claim","taskId":"feature-intake-example","failureClass":"false-done","expectedBlock":"task-evidence","evidence":["missing taskContractPath","missing evidencePath"]}

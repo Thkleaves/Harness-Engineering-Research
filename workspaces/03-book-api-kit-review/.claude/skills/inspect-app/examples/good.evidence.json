@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skill": "inspect-app",
+  "case": "good",
+  "taskId": "inspect-app-example",
+  "featureId": "inspect-app-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    ".harness/reports/inspect-app-example.md"
+  ],
+  "diffSummary": "Produced a read-only app inspection with entrypoints, risks, and verification recommendations.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=inspect-app",
+      "status": "pass",
+      "summary": "Inspect-app example trace and evidence validated."
+    }
+  ]
+}

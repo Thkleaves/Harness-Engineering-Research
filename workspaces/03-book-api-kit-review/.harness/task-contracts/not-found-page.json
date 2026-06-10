@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "not-found-page",
+  "type": "feature",
+  "riskTier": "normal",
+  "scope": {
+    "summary": "Custom 404 page or handler",
+    "goals": [
+      "Return a deliberate 404 experience for unknown routes",
+      "Prove the behavior with a deterministic command"
+    ],
+    "nonGoals": [
+      "Do not change routing for existing valid paths"
+    ],
+    "allowedLayers": ["types", "config", "repo", "service", "runtime", "ui"]
+  },
+  "acceptance": [
+    {
+      "id": "unknown-route-404",
+      "description": "An unknown route returns HTTP 404 with the custom body or view.",
+      "verification": {
+        "command": "npm test && curl /no-such-path"
+      }
+    },
+    {
+      "id": "regression-safety",
+      "description": "Existing valid routes remain unchanged.",
+      "verification": {
+        "command": "npm test"
+      }
+    }
+  ],
+  "requiresAdr": false,
+  "requiredReviewers": [],
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "LS",
+      "Edit",
+      "Write",
+      "Bash(npm test*)",
+      "Bash(git status*)",
+      "Bash(git diff*)"
+    ],
+    "deny": [
+      "Bash(git commit*)",
+      "Bash(git push*)"
+    ]
+  },
+  "doneRequires": ["structural", "tests", "smoke", "evidence-bundle"],
+  "evidencePath": ".harness/evidence/not-found-page.json"
+}

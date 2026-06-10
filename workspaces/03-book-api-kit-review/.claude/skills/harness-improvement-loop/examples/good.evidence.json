@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skill": "harness-improvement-loop",
+  "case": "good",
+  "taskId": "harness-improvement-loop-example",
+  "featureId": "harness-improvement-loop-example",
+  "status": "pass",
+  "createdAt": "2026-05-30T00:00:00Z",
+  "changedFiles": [
+    ".harness/failures/records/harness-improvement-loop-example.json"
+  ],
+  "diffSummary": "Converted a failure record into a prevention artifact with verification evidence.",
+  "checks": [
+    {
+      "name": "skill-example-replay",
+      "command": "node .harness/scripts/check-skill-examples.mjs --skill=harness-improvement-loop",
+      "status": "pass",
+      "summary": "Harness-improvement-loop example trace and evidence validated."
+    }
+  ]
+}

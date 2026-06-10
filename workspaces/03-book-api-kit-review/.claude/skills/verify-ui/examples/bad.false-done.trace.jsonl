@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"verify-ui","traceId":"verify-ui-false-done","case":"bad-false-done","event":"ui_pass_claim","taskId":"verify-ui-example","failureClass":"false-done","expectedBlock":"task-evidence","evidence":["no artifact path","mock-only proof"]}

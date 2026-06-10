@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"debug-flow","traceId":"debug-flow-overbroad-edit","case":"bad-overbroad-edit","event":"permission_request","taskId":"debug-flow-example","failureClass":"permission-gap","expectedBlock":"task-permission","evidence":["requested broad refactor instead of focused reproduction fix"]}

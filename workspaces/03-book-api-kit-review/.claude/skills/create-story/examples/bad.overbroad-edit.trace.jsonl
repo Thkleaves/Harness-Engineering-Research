@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"create-story","traceId":"create-story-overbroad-edit","case":"bad-overbroad-edit","event":"permission_request","taskId":"create-story-example","failureClass":"permission-gap","expectedBlock":"permission-policy","evidence":["requested Write outside .harness story/task paths"]}

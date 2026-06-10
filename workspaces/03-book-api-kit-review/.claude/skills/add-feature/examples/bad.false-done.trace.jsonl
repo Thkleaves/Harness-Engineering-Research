@@ -1,0 +1,1 @@
+{"schemaVersion":1,"skill":"add-feature","traceId":"add-feature-false-done","case":"bad-false-done","event":"completion_claim","taskId":"add-feature-example","failureClass":"false-done","expectedBlock":"stop-hook","evidence":["no tests","no evidence bundle"]}

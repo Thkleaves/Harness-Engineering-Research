@@ -1,0 +1,84 @@
+name: 04-book-api-forge
+description: java project at 04-book-api-forge
+project_type: library
+primary_language: java
+frameworks: []
+test_command: null
+lint_command: null
+build_command: null
+dev_command: null
+forbidden_paths:
+- .env
+- .env.*
+- '*.pem'
+- '*.key'
+- secrets/
+forbidden_commands:
+- rm -rf /
+- rm -rf ~
+- rm -rf .
+- git push --force
+- git push -f
+- git reset --hard origin/*
+requires_human_approval:
+- any git push to main/master
+- any deploy command
+- any `rm -rf` of more than one directory
+required_env_vars: []
+secrets_handling: use .env, never log values, never commit
+conventions:
+- "Read the surrounding code before making any edit \u2014 match local conventions."
+- Prefer editing existing files over creating new ones unless asked.
+success_criteria:
+- Code change is small, focused, and readable
+- "Diff is minimal \u2014 touch only files relevant to the task"
+- Commit message explains *why*, not just *what*
+recommended_mcps:
+- filesystem
+- git
+- github
+repo_tools: []
+default_model: claude-sonnet-4-5
+cost_ceiling_usd_per_task: 0.5
+max_steps: 12
+harness_version: 0.2.2
+generated_from:
+  inspection:
+    languages:
+    - java
+    frameworks: []
+    package_managers: []
+    test_commands: []
+    lint_commands: []
+    build_commands: []
+    dev_commands: []
+    env_vars_expected: []
+    ci:
+      enabled: false
+      provider: null
+    containerization:
+      dockerfile: false
+      docker_compose: false
+      kubernetes: false
+    git:
+      remote: null
+      default_branch: master
+    readme_excerpt: ''
+    contributing_excerpt: ''
+    top_level_dirs:
+    - docs
+    - scripts
+    - SKILLS
+    - src
+    scale:
+      file_count: 31
+      line_count_approx: 2000
+    existing_agent_configs:
+    - .claude/CLAUDE.md
+    - .cursor/rules
+    - AGENTS.md
+    - .continue/config.json
+    - .windsurf/rules
+    detected_mcps: []
+    notes: []
+  profiler: deterministic-template
