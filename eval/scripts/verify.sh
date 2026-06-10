@@ -26,10 +26,14 @@ QUALITY_SCORE=0
 # GATE: 编译检查
 # ═══════════════════════════════════════════════
 echo "[verify] mvn compile..." >&2
-if mvn compile -q 2>/dev/null; then
+COMPILE_ERR=$(mktemp)
+if mvn compile -q 2>"$COMPILE_ERR"; then
     COMPILE_OK=true
+    rm -f "$COMPILE_ERR"
 else
-    echo '{"pass":false,"score":0,"reason":"compile failed"}'
+    COMPILE_ERR_MSG=$(cat "$COMPILE_ERR" 2>/dev/null | head -20)
+    rm -f "$COMPILE_ERR"
+    echo "{\"pass\":false,\"score\":0,\"reason\":\"compile failed\",\"mvn_error\":$(echo "$COMPILE_ERR_MSG" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))" 2>/dev/null || echo '"unknown"')}"
     exit 0
 fi
 

@@ -18,7 +18,7 @@ workspaces/*/.git/
 
 # 评测运行时产物
 eval/tmp/
-eval/results/
+# eval/results/ — 保留结果用于追踪
 
 # Logs
 *.log

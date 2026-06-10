@@ -224,6 +224,30 @@ run_single() {
 }
 
 # ═════════════════════════════════════════════════╗
+# Git 自动同步                                       ║
+# ═════════════════════════════════════════════════╝
+
+git_sync() {
+    local label="$1"
+    local timestamp
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+    cd "$EVAL_DIR/.."
+
+    # 检查是否有变更
+    if git diff --quiet && git diff --cached --quiet; then
+        echo "[git] 无变更，跳过提交"
+        return 0
+    fi
+
+    echo "[git] 提交并推送..."
+    git add eval/results/ eval/scripts/ eval/tasks/ eval/workspaces/ eval/providers/ eval/promptfooconfig.yaml 2>/dev/null || true
+    git commit -m "${label} — ${timestamp}" 2>/dev/null || true
+    git push origin master 2>/dev/null || true
+    echo "[git] ✓ 已推送: ${label} — ${timestamp}"
+}
+
+# ═════════════════════════════════════════════════╗
 # 模式分发                                          ║
 # ═════════════════════════════════════════════════╝
 
@@ -234,6 +258,7 @@ case "$MODE" in
         for provider in "${PROVIDERS[@]}"; do
             run_single "03-pagination" "$provider" 1
         done
+        git_sync "Pilot 试跑: 任务③ 分页排序 (4组×1次)"
         echo "=== Pilot 完成 ==="
         ;;
 
@@ -247,6 +272,7 @@ case "$MODE" in
                 done
             done
         done
+        git_sync "L1 评测: 任务①② 验证与执行器 (4组×1次)"
         echo "=== L1 完成 ==="
         ;;
 
@@ -260,7 +286,36 @@ case "$MODE" in
                 done
             done
         done
+        git_sync "L2 评测: 任务③④⑤⑥ 分页/注册/缓存/限流 (4组×1次)"
         echo "=== L2 完成 ==="
+        ;;
+
+    l2a)
+        echo "=== L2-A: 任务③④ 分页排序 + 注册验证 ==="
+        echo "4 Provider × 2 任务 × 1 次 = 8 条"
+        for run in 1; do
+            for task in "03-pagination" "04-register"; do
+                for provider in "${PROVIDERS[@]}"; do
+                    run_single "$task" "$provider" "$run"
+                done
+            done
+        done
+        git_sync "L2-A 评测: 任务③④ 分页排序与注册验证 (4组×1次)"
+        echo "=== L2-A 完成 ==="
+        ;;
+
+    l2b)
+        echo "=== L2-B: 任务⑤⑥ Redis缓存 + 限流 ==="
+        echo "4 Provider × 2 任务 × 1 次 = 8 条"
+        for run in 1; do
+            for task in "05-redis-cache" "06-ratelimit"; do
+                for provider in "${PROVIDERS[@]}"; do
+                    run_single "$task" "$provider" "$run"
+                done
+            done
+        done
+        git_sync "L2-B 评测: 任务⑤⑥ Redis缓存与限流 (4组×1次)"
+        echo "=== L2-B 完成 ==="
         ;;
 
     l3)
@@ -273,6 +328,7 @@ case "$MODE" in
                 done
             done
         done
+        git_sync "L3 评测: 任务⑦⑧⑨⑩ JWT/重构/上传/N+1 (4组×3次)"
         echo "=== L3 完成 ==="
         ;;
 
@@ -286,6 +342,7 @@ case "$MODE" in
                 done
             done
         done
+        git_sync "L4 评测: 任务⑪⑫ 并发预订与Flaky测试 (4组×3次)"
         echo "=== L4 完成 ==="
         ;;
 
@@ -307,6 +364,7 @@ case "$MODE" in
         TASK="$2"
         PROVIDER="${3:-superpowers}"
         run_single "$TASK" "$PROVIDER" 1
+        git_sync "手动评测: ${TASK} (${PROVIDER})"
         ;;
 
     help|*)
@@ -315,6 +373,8 @@ case "$MODE" in
         echo "  pilot              Pilot 试跑（任务③, 4组×1次=4条）"
         echo "  l1                 L1 批量（任务①②, 4组×1次=8条）"
         echo "  l2                 L2 批量（任务③④⑤⑥, 4组×1次=16条）"
+        echo "  l2a                L2-A 前半（任务③④, 4组×1次=8条）"
+        echo "  l2b                L2-B 后半（任务⑤⑥, 4组×1次=8条）"
         echo "  l3                 L3 批量（任务⑦⑧⑨⑩, 4组×3次=48条）"
         echo "  l4                 L4 批量（任务⑪⑫, 4组×3次=24条）"
         echo "  all                全量（96条）"
