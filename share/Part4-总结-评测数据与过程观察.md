@@ -70,7 +70,12 @@ Superpowers 在本次评测中总分与 Baseline 持平（1045），但过程评
 ---
 
 > 相关资源：
-> - 评测数据：`eval/results/eval-results.csv`
-> - 逐任务分析：`eval/results/task-*.md`
-> - 实操记录：`records/` 目录
+> - 评测数据：`eval/results/eval-results.csv`（48 条记录）
+> - 逐任务分析：`eval/results/task-*.md`（12 个任务）
+> - 过程评测分析：`eval/results/process-analysis-url-shortener.md`
 > - Day 1 对照实验：`records/任务④-裸Agent对比记录.md`
+> - Superpowers 实操记录：`records/任务③-Superpowers全流程总结.md`
+> - HarnessForge 试用：`records/任务⑥-HarnessForge试用.md`
+> - Kit 10 维评审：`records/任务⑤-kit-10维度评审.md`
+> - Book API 项目（workspace 01-04）：`workspaces/` 目录
+> - URL 短链接服务：`workspaces/url-shortener-*/`

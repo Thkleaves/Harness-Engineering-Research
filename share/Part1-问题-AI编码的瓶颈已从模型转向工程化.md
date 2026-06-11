@@ -121,4 +121,10 @@ Agent 自选了 Base62 自增 ID → 短码可预测，暴露内部计数
 
 ---
 
-> 数据来源：`records/任务④-裸Agent对比记录.md`、`eval/results/eval-results.csv`、`eval/results/process-analysis-url-shortener.md`
+> 本章涉及的源码与数据：
+> - Book API 基线项目（裸 Agent）：`workspaces/02-book-api-bare/`
+> - Book API Superpowers 版本：`workspaces/01-book-api/`
+> - 短链接服务裸 Agent 版本：`workspaces/url-shortener-bare/`
+> - 短链接服务 Harness 版本：`workspaces/url-shortener-harness/`
+> - Day 1 对照实验记录：`records/任务④-裸Agent对比记录.md`
+> - 过程评测完整分析：`eval/results/process-analysis-url-shortener.md`

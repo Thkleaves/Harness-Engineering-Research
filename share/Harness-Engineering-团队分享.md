@@ -184,7 +184,7 @@ L4 (高级):  最大分化   → Gstack 在 N+1(+25) 和并发(+10) 上大幅领
 
 **Superpowers 消耗了最多的 Token（+44% vs Gstack）和最长的耗时（+53% vs Gstack），但得分与 Baseline 持平。**
 
-### 3.5 七个关键发现
+### 3.5 十个关键发现
 
 #### 发现一：流程步骤多 ≠ 质量好
 
@@ -312,7 +312,14 @@ Superpowers 在本次评测中总分与 Baseline 持平（1045），但过程评
 - **12 任务评测结果**: `eval/results/eval-results.csv`（48 条记录）
 - **逐任务分析**: `eval/results/task-*.md`（12 个文件）
 - **过程评测分析**: `eval/results/process-analysis-url-shortener.md`
+- **评测总结**: `eval/results/README.md`
 - **Day 1 对照实验**: `records/任务④-裸Agent对比记录.md`
-- **Superpowers 实操**: `records/任务③-Superpowers全流程总结.md`
+- **Superpowers 实操**: `records/任务③-Superpowers全流程总结.md`、`records/任务⑦-Superpowers-L2分页排序.md`
+- **Kit 评审**: `records/任务⑤-kit-10维度评审.md`
+- **HarnessForge 试用**: `records/任务⑥-HarnessForge试用.md`
+- **踩坑清单**: `records/任务⑧-踩坑清单.md`
+- **评测规划**: `plans/` 目录（6 篇）
+- **Book API**: `workspaces/01-book-api/` ~ `04-book-api-forge/`
+- **URL 短链接服务**: `workspaces/url-shortener-bare/`、`workspaces/url-shortener-harness/`
 
 所有评测使用 **DeepSeek-V4-pro** 模型，运行日期 2026-06-10 ~ 2026-06-11。
