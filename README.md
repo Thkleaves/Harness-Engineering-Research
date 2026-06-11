@@ -1,20 +1,20 @@
 # Harness Engineering 调研实践
 
-> **状态**: Day 1 完成 | **日期**: 2026-06-09 | **当前阶段**: 工具深潜 + 实操数据采集
+> **状态**: 完成 | **日期**: 2026-06-09 ~ 2026-06-11 | **阶段**: 数据汇总 + 团队分享
 
 ---
 
 ## 📋 项目概述
 
-本项目对 **Harness Engineering（工程化框架）** 领域进行系统性实操调研，通过对照实验评估 Superpowers、agent-harness-kit、HarnessForge 三个核心工具的实际效果，最终产出有数据支撑的团队技术分享。
+本项目对 **Harness Engineering（工程化框架）** 领域进行系统性实操调研，通过 12 个 Spring Boot 任务的量化评测 + URL 短链接服务的过程评测，评估 Bare Agent vs Superpowers vs Gstack vs OpenSpec 四种工作模式的实际效果。
 
 Harness Engineering 是指围绕 AI 编码代理（Coding Agent）构建的**工程化基础设施**——包括上下文管理、工具治理、安全护栏、可观测性、记忆系统、编排调度等。
 
-### 核心论点
+### 核心发现
 
-> **AI 编码能力的瓶颈已从模型能力转向工程化框架质量。**  
-> 同一模型在不同 Harness 下表现差异显著。LangChain 在 Terminal-Bench 2.0 上证实 Harness 优化（+13.7%）ROI 高于模型升级（+5.2%）。  
-> *"Agent = Model + Harness"* — 模型是引擎，Harness 是让它可控行驶的底盘。
+> **Superpowers 并未击败裸 Agent（总分 1045 = 1045）。**  
+> Gstack 以 1090 分排名第一，证明**角色分工 > 流程约束**。  
+> 自动评测中禁止用户交互，系统性低估了 Harness 在**需求澄清阶段**的核心价值——用户的 3 轮决策可以彻底改变架构选型（过程评测证实）。
 
 ---
 
@@ -26,26 +26,44 @@ Harness/
 ├── plans/                             ← 调研文档 + 4 天冲刺计划
 │   ├── 01-概念与背景.md                ← 什么是 Harness Engineering
 │   ├── 02-工具调研与对比.md             ← 工具全景调研与横向对比
-│   ├── 03-工具实操指南/                ← 各工具实操指南
-│   │   ├── 03-01-Superpowers.md
-│   │   ├── 03-02-Agent-Harness-Kit.md
-│   │   └── 03-03-HarnessForge.md
 │   ├── 04-实践对比分析.md               ← 实操对比分析
 │   ├── 05-团队使用建议.md               ← 团队落地建议与路线图
 │   ├── 06-评测方案设计.md               ← 评测框架设计
 │   └── PLAN.md                        ← 4 天冲刺详细任务表
 ├── records/                           ← Day 1 实操记录
-│   ├── 任务③-Superpowers全流程总结.md    ← Superpowers 全流程跑通记录
-│   ├── 任务④-裸Agent对比记录.md          ← 裸 Agent vs Superpowers 对照实验
-│   ├── 任务⑤-kit-10维度评审.md           ← agent-harness-kit 10 维度评审
-│   ├── 任务⑥-HarnessForge试用.md          ← HarnessForge init 试用
-│   ├── 任务⑦-Superpowers-L2分页排序.md     ← Superpowers L2 功能
-│   └── 任务⑧-踩坑清单.md                 ← 11 条踩坑经验
-└── workspaces/                        ← 评测用项目副本
-    ├── 01-book-api/                   ← Superpowers 全流程（L1 校验 + L2 分页排序）
-    ├── 02-book-api-bare/              ← 裸 Agent 对照（仅基础校验）
-    ├── 03-book-api-kit-review/        ← agent-harness-kit 评审工作区
-    └── 04-book-api-forge/             ← HarnessForge 试用工作区
+│   ├── 任务③-Superpowers全流程总结.md
+│   ├── 任务④-裸Agent对比记录.md
+│   ├── 任务⑤-kit-10维度评审.md
+│   ├── 任务⑥-HarnessForge试用.md
+│   ├── 任务⑦-Superpowers-L2分页排序.md
+│   └── 任务⑧-踩坑清单.md
+├── eval/                              ← 评测框架
+│   ├── scripts/                       ← 自动化脚本
+│   │   ├── run-eval.sh                ← 主评测 runner（支持 l1/l2a/l2b/l3a/l3b/l4 模式）
+│   │   ├── verify.sh                  ← 评分脚本（编译 gate + 测试 + 任务断言）
+│   │   ├── rebuild-csv.sh             ← 批量重验 + CSV 重建
+│   │   ├── run-provider.sh            ← 单 Provider 执行器
+│   │   └── score.js                   ← 评分逻辑（JS）
+│   ├── providers/                     ← Provider 配置文件（harness 指令）
+│   ├── tasks/                         ← 12 个任务 spec（中文）
+│   ├── results/                       ← 评测产出
+│   │   ├── eval-results.csv           ← 48 条完整数据（12 任务 × 4 Provider）
+│   │   ├── README.md                  ← 评测总结（得分表 + 5 大核心发现）
+│   │   ├── task-01-validation.md ~ task-12-flaky-test.md  ← 12 篇逐任务分析
+│   │   └── process-analysis-url-shortener.md               ← 过程评测三轮对比
+│   └── promptfooconfig.yaml           ← Promptfoo 框架配置
+├── workspaces/                        ← 所有工作区
+│   ├── 01-book-api/                   ← Superpowers 全流程（L1 校验 + L2 分页排序）
+│   ├── 02-book-api-bare/              ← 裸 Agent 对照
+│   ├── 03-book-api-kit-review/        ← agent-harness-kit 评审
+│   ├── 04-book-api-forge/             ← HarnessForge 试用
+│   ├── url-shortener-bare/            ← 过程评测：裸 Agent（13 测试）
+│   └── url-shortener-harness/         ← 过程评测：Harness 交互版（19 测试）
+└── share/                             ← 团队分享文档
+    ├── Part1-问题.md                   ← 问题背景 + 两则案例
+    ├── Part2-方法.md                   ← 评测方法论
+    ├── Part3-数据.md                   ← 48 条数据 + 10 大发现
+    └── Part4-总结.md                   ← 综合结论
 ```
 
 ---
@@ -54,62 +72,59 @@ Harness/
 
 | 维度 | 覆盖 |
 |------|------|
-| **核心工具** | Superpowers (v5.1.0)、agent-harness-kit (v0.22.3)、HarnessForge (v0.2.2) |
-| **参考工具** | Agent Harness (Go)、HarnessFlow、Harness Skills、OpenHarness |
-| **调研方式** | 官方文档研读 + 实操 A/B 对照实验 + 多维评审 + 踩坑记录 |
-| **实验项目** | Spring Boot 3.4 + Java 21 Book CRUD API（内存存储） |
-| **评估维度** | 功能完整度、上手难度、代码质量产出、测试覆盖、文档产出、Token 效率 |
+| **量化评测** | 12 个 Spring Boot 任务 × 4 组 Provider = 48 条记录 |
+| **过程评测** | URL 短链接服务三轮对比（裸Agent vs Harness自动 vs Harness交互） |
+| **Provider** | Baseline(裸Agent)、Superpowers(v5.1.0)、Gstack、OpenSpec |
+| **模型** | DeepSeek-V4-pro |
+| **实验项目** | Spring Boot 3.4 + Java 21 + Maven |
+| **评估维度** | 编译通过率、测试覆盖、任务断言完成度、代码质量、Token 效率、架构决策 |
 
 ---
 
-## 🔑 Day 1 核心发现
+## 🔑 核心结论
 
-### 1. brainstorming 是 Superpowers 最被低估的价值点
+### 1. 量化评测：Gstack 最优，Superpowers = Baseline
 
-两次实验（L1 校验 + L2 分页排序），Superpowers 通过 5-6 轮苏格拉底式追问把一句模糊需求变成了可执行的 spec。裸 Agent 对照实验验证了这一点——没有 brainstorming 时只做表面校验（`@NotBlank`），遗漏了 ISBN 格式、价格小数位、PUT 部分更新策略。
+| Provider | 总分 | 平均分 | 满分次数 |
+|----------|:---:|:---:|:---:|
+| **Gstack** | **1090** | **90.8** | 2 |
+| OpenSpec | 1065 | 88.8 | 2 |
+| Baseline（裸Agent） | 1045 | 87.1 | 2 |
+| Superpowers | 1045 | 87.1 | 2 |
 
-### 2. 三个工具定位互补，不是竞品
+- Gstack 的角色分工（CEO → Engineer → QA → DevOps）比 Superpowers 的严格流程（brainstorming → plan → TDD → review）更有效
+- Superpowers 流程最繁重但得分与裸 Agent 持平——**流程步骤多 ≠ 质量好**
+- 任务难度越大，Harness 价值越高（L4 中 Gstack 在 N+1 修复上领先 Baseline 25 分）
 
-```
-HarnessForge → "3 秒让项目 Agent Ready"（配置骨架，~20 文件）
-Superpowers → "完整开发流程"（brainstorm → spec → plan → TDD → review）
-agent-harness-kit → "生产级安全护栏"（10 维度评审 + Failures→Rules + Hook 系统）
-```
+### 2. 过程评测：禁止交互 = 剥夺 Harness 核心价值
 
-推荐叠加路径：Forge init → Superpowers 插件 → kit 在关键 PR 做深度评审。
+URL 短链接三轮对比实验揭示：
 
-### 3. 架构决策是模型做的，Harness 影响的是深度
+- 裸Agent 和 Harness自动在核心算法上**完全一致**（Base62 自增、不去重）——Agent 的"自问自答"没有改变核心决策
+- 用户 3 轮交互改变了架构：随机 7 位 SecureRandom、24h urlIndex 去重、完整访问日志 100 条、Clock 注入
+- 交互集中在需求澄清阶段（前 20% 时间），80% 的编码工作不需要用户参与
 
-Superpowers 和裸 Agent 在同一个需求上选择了完全相同的架构方案（Jakarta Bean Validation 直接注解实体），说明这个层级的判断力来自模型本身。差异在：Superpowers 追问了 6 个具体选择，做出了 ISBN 格式校验和价格小数位校验；裸 Agent 停在 `@NotBlank` + `@NotNull`。
+### 3. Token 效率差异巨大
 
-### 4. 子代理在非 Claude 模型下不稳定
+Superpowers 的总 token 消耗是 Gstack 的 1.5-2 倍，但得分不增。流程繁重 = 成本增加 ≠ 质量提升。
 
-Subagent-Driven Development 在 DeepSeek 模型下三个子代理全部失败（API 参数不兼容），需 Inline Execution 作为回退。
+### 4. Agent 共性问题
+
+- 倾向"加新代码"而非"改旧代码"（Flaky 测试四组全部失败于未移除 LocalDate.now()）
+- 自动场景下架构决策趋同（缺乏外部信息输入时只能选"合理默认值"）
 
 ---
 
-## 🚀 4 天冲刺进度
+## 🚀 进度回顾
 
 ```
-Day 1 ✅ 工具深潜 + 亲手跑通（8/8 任务完成）
-Day 2 ⬜ 评测基础设施 + L1/L2 全量跑（目标 52 条数据）
-Day 3 ⬜ L3/L4 全量跑 + 数据汇总（目标 120+ 条数据）
-Day 4 ⬜ 数据可视化 + Slide 制作 + 团队分享
+Day 1 (06/09) ✅ 工具深潜 + 实操跑通——8/8 任务完成，3 个工具试用，11 条踩坑清单
+Day 2 (06/10) ✅ 评测基础设施——CRLF 修复、verify.sh 加固、L1+L2 全量 26 条数据
+Day 3 (06/11) ✅ L3+L4 全量 + 过程评测 + 分享文档——48 条完整数据、12 篇任务分析、
+                     URL 短链接三轮对比、Part1-4 分享文档
 ```
 
-详细任务见 [plans/PLAN.md](plans/PLAN.md)。
-
-## 📊 Day 1 产出统计
-
-| 指标 | 数值 |
-|------|:----:|
-| 实操工具 | 3 个 |
-| 功能跑通 | 2 个（L1 校验 + L2 分页排序） |
-| 工作区 | 4 个 |
-| 记录文档 | 8 篇 |
-| 踩坑清单 | 11 条（阻塞 2 / 阻碍 5 / 轻度 4） |
-| 单元测试 | 23 个（Superpowers L2） |
-| Git commits | 7 个（Superpowers L2） |
+---
 
 ## 📚 参考资源
 
