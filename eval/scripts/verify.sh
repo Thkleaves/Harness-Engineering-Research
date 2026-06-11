@@ -8,6 +8,23 @@
 WORKSPACE="${1:-.}"
 TASK_ID="${2:-}"
 
+# 确保 maven 在 PATH 中（兼容 Git Bash / WSL / 纯 bash 环境）
+for candidate in \
+    "/c/Users/Kleaves/apache-maven-3.9.16/bin" \
+    "/mnt/c/Users/Kleaves/apache-maven-3.9.16/bin" \
+    "/c/Program Files/Maven/apache-maven/bin" \
+    "/mnt/c/Program Files/Maven/apache-maven/bin" \
+    "$HOME/apache-maven/bin"; do
+    if [ -x "$candidate/mvn" ]; then
+        export PATH="$candidate:$PATH"
+        break
+    fi
+done
+if ! command -v mvn >/dev/null 2>&1; then
+    echo "{\"pass\":false,\"score\":0,\"reason\":\"mvn not found in PATH: $PATH\"}"
+    exit 0
+fi
+
 if [ ! -d "$WORKSPACE" ]; then
     echo '{"pass":false,"score":0,"reason":"workspace not found"}'
     exit 1
