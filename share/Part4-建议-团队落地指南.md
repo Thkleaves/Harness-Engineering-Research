@@ -66,10 +66,19 @@ Step 3: agent-harness-kit ─────────── 关键节点
 | ❌ 不要 | ✅ 应该 |
 |--------|--------|
 | 所有任务都开 Superpowers 全流程 | 按任务复杂度选择性开启 |
+| **禁止 Agent 向用户提问** | **让 Agent 在需求澄清阶段提问——那是 Harness 的核心价值** |
 | 指望 Harness 让 Agent 主动改旧代码 | 重构需求主动写清楚"替换 X 为 Y" |
 | 在简单任务上用 brainstorming | 需求明确就直接动手 |
 | 只看单次得分评价 Harness | 纳入文档产出、多轮稳定性等 Soft Value |
 | 只用一个 Harness | 三个叠加，场景化使用 |
+
+### 关于禁止提问的重要教训
+
+我们在 12 任务评测中为了自动化，禁止 Agent 使用 AskUserQuestion。**这直接导致了 Superpowers 得分 = Baseline。**
+
+补做的过程评测证明：同样有 Harness 流程引导，**允许提问的版本核心架构完全不同于禁止提问的版本**（随机码 vs 自增ID，有幂等 vs 无幂等）。自动评测衡量的是 Agent 的"猜测能力"，不是 Harness 的"协作能力"。
+
+如果你在自己的项目里用 Superpowers，**不要禁止提问**。前 3-5 轮需求澄清花 2 分钟，能省掉后面 20 分钟的返工。
 
 ### 关于 Superpowers 的正确期待
 
