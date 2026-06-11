@@ -1,4 +1,4 @@
-# Part 4：建议 —— 团队怎么落地
+# Part 4：总结
 
 ---
 
@@ -22,73 +22,54 @@ HarnessForge          Superpowers            agent-harness-kit
 的项目                review 的交付物        安全漏洞清单
 ```
 
+三个工具不是竞品关系，各自解决不同层面的问题：Forge 做项目初始化，Superpowers 做开发流程，kit 做安全审计。
 
 ---
 
-## 4.2 推荐叠加路径
+## 4.2 三种工具的叠加关系
 
-```
-Step 1: HarnessForge init ───────────────────── 零成本
-  └─ 任何项目先 init，让项目 Agent Ready
-  └─ 这一步不增加任何开发环节
+评测中 Gstack 总分最高（1090），但这不是说"只用 Gstack 就行"——Superpowers 在算法类任务（任务⑥ 限流 100 分）无人能及，OpenSpec 在 API 设计类任务（任务④ 满分）上最强。不同工具在不同场景下互补。
 
-Step 2: Superpowers 插件 ────────────── 按场景开启
-  ├─ 新功能开发、需求模糊  → 全开（brainstorming + plan + TDD + review）
-  ├─ 算法实现（限流/加密）  → 开 TDD + review，关 brainstorming
-  ├─ 简单修 Bug、重构      → 关 brainstorming + plan，保留 review + verify
-  └─ 简单 CRUD、配置变更   → 关掉 Harness，裸 Agent 直接写
+评测过程中实际采用的叠加方式：
 
-Step 3: agent-harness-kit ─────────── 关键节点
-  ├─ PR merge 前           → 跑 10 维评审
-  ├─ 安全敏感功能          → 专项安全评审
-  └─ 定期（每周）          → 架构 + 技术债务评审
-```
+1. **HarnessForge init** — 先把项目变成 Agent Ready，这步没有额外成本
+2. **Superpowers 插件** — 在需求模糊的新功能上全开，简单任务上关掉 brainstorming，保留 review + verify
+3. **agent-harness-kit** — 只在关键节点用（PR review、安全审计），频率低价值高
 
 ---
 
-## 4.3 分场景选择矩阵
+## 4.3 不同场景在评测中的表现
 
-| 场景 | 推荐 Harness | 时长预期 | 原因 |
-|------|:----------:|:---:|------|
-| 简单 CRUD / 配置变更 | 不开 Harness | 1-2 min | L1 数据：Harness = 纯 Token 浪费 |
-| API 设计先行（新模块） | OpenSpec | 5-8 min | Spec 驱动在 API 设计上有系统性优势 |
-| 算法实现（限流/加密/编码） | **Superpowers** | 10-15 min | TDD 在算法上最强，唯一满分 |
-| 多组件协作（认证/上传） | **Gstack** | 8-12 min | 角色分工覆盖不同关注面 |
-| 性能优化 / Bug 修复 | **Gstack** | 5-10 min | QA 角色推动"验证是否真的修好了" |
-| 存量代码重构 | Baseline 即可 | 3-5 min | L3 数据：裸 Agent 一次做对 |
-| 安全敏感功能 | kit 10 维 + 任意 Harness | +5 min | 安全是专项，不是流程能兜底 |
-| 需求极度模糊的新功能 | **Superpowers 全开** | 15-20 min | brainstorming 追问是核心价值 |
+| 场景 | 评测中领先的 Harness | 数据 |
+|------|:----------:|------|
+| 简单 CRUD / 配置变更 | 各组同分 | L1 数据：四组 95/90，Harness 无差异 |
+| 算法实现（限流/加密/编码） | **Superpowers** | 任务⑥ 唯一满分，TDD 在算法上最强 |
+| 多组件协作（认证/文件上传/消息） | **Gstack** | 任务⑦⑨ 多角色覆盖不同关注面 |
+| API 设计先行 | **OpenSpec** | 任务③④ 领先，Spec 驱动在接口定义上占优 |
+| 性能优化 / Bug 修复 | **Gstack** | 任务⑩ 领先 25 分，QA 推动"验证是否真的修好" |
+| 存量代码重构 | 各组同分 | L3 数据：四组 100，裸 Agent 一次做对 |
+| 需求极度模糊的新功能 | 数据不足 | 过程评测表明，需要用户交互才能发挥 Harness 价值 |
+| 全局重构（改旧代码） | 全部落后 | 任务⑫ 四组 70 分，所有 Harness 都推不动 Agent 改旧代码 |
 
 ---
 
-## 4.4 不要做的事
+### 关于 Superpowers 的得分
 
-| ❌ 不要 | ✅ 应该 |
-|--------|--------|
-| 所有任务都开 Superpowers 全流程 | 按任务复杂度选择性开启 |
-| **禁止 Agent 向用户提问** | **让 Agent 在需求澄清阶段提问——那是 Harness 的核心价值** |
-| 指望 Harness 让 Agent 主动改旧代码 | 重构需求主动写清楚"替换 X 为 Y" |
-| 在简单任务上用 brainstorming | 需求明确就直接动手 |
-| 只看单次得分评价 Harness | 纳入文档产出、多轮稳定性等 Soft Value |
-| 只用一个 Harness | 三个叠加，场景化使用 |
+Superpowers 在本次评测中总分与 Baseline 持平（1045），但过程评测揭示了原因：自动评测中 Agent 被禁止提问，brainstorming 退化成了自问自答。补做的交互实验证明，允许用户参与后架构决策完全不同（随机码 vs 自增ID，有幂等 vs 无幂等）。
 
-### 关于禁止提问的重要教训
+另外 Superpowers 的 spec/plan 文档产出是跨会话的记忆——单次评测测不出这个价值，但在多轮迭代和长期维护中会逐渐显现。
 
-我们在 12 任务评测中为了自动化，禁止 Agent 使用 AskUserQuestion。**这直接导致了 Superpowers 得分 = Baseline。**
+---
 
-补做的过程评测证明：同样有 Harness 流程引导，**允许提问的版本核心架构完全不同于禁止提问的版本**（随机码 vs 自增ID，有幂等 vs 无幂等）。自动评测衡量的是 Agent 的"猜测能力"，不是 Harness 的"协作能力"。
+## 4.4 实验过程中的摸索路径
 
-如果你在自己的项目里用 Superpowers，**不要禁止提问**。前 3-5 轮需求澄清花 2 分钟，能省掉后面 20 分钟的返工。
+评测环境和工具链的搭建经历了一个逐步迭代的过程，大致阶段：
 
-### 关于 Superpowers 的正确期待
-
-Superpowers 在本次评测中得分与 Baseline 持平，但如果你的场景是——
-
-```
-需求模糊（"加个校验"）+ 质量要求高 + 长期维护 + 多轮迭代
-```
-
-——那么 brainstorming 的追问深度、spec/plan 的文档沉淀、TDD 的测试覆盖、review 的盲区发现，这些价值会在 **第 2 轮、第 3 轮、一个月后** 逐渐显现。一次评测测不出来，不等于不存在。
+1. 先让单个项目跑通 HarnessForge init，验证 Agent Ready 状态
+2. 在需求模糊的新功能上开 Superpowers 全流程，建立对流程的直观感受
+3. 在关键节点试用 kit 深度评审，对比与手工 review 的差异
+4. 收集每次的数据，记录 Harness 帮发现了什么盲区
+5. 形成对"什么场景下哪个工具最有效"的判断
 
 ---
 
@@ -96,9 +77,7 @@ Superpowers 在本次评测中得分与 Baseline 持平，但如果你的场景�
 
 > **Harness 不能把烂模型变好，但能让同一个模型在正确的场景下做得更深、更稳、更可追溯。**
 >
-> 关键不是"用不用"，是"知道什么时候用哪个"。
->
-> 我们的数据说：角色分工（Gstack）在大多数场景胜出，但 TDD（Superpowers）在算法类任务上无人能及。裸 Agent 永远是小任务的正确答案。把三个工具叠加、按场景切换，才是最优解。
+> 评测数据表明：Gstack 在大多数场景得分最高，但 Superpowers 在算法类任务上无人能及，OpenSpec 在 API 设计上有系统性优势。裸 Agent 永远是小任务的正确答案。把三个工具叠加、按场景切换，而不是指望一个 Harness 包打天下。
 
 ---
 

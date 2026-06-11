@@ -270,52 +270,39 @@ agent-harness-kit → "生产级安全护栏"
   └─ 适用: 关键 PR 的深度评审
 ```
 
-### 4.2 推荐叠加路径
+### 4.2 三种工具的叠加关系
 
-```
-Step 1: HarnessForge init
-  └─ 先把项目变成 Agent Ready
-  └─ 成本和风险都最低
+评测中 Gstack 总分最高（1090），但不意味着"只用 Gstack 就行"——Superpowers 在算法类任务（任务⑥ 限流 100 分）无人能及，OpenSpec 在 API 设计类任务（任务④ 满分）上最强。不同工具在不同场景下互补。
 
-Step 2: Superpowers 插件（按场景开启）
-  ├─ 新功能开发、需求模糊 → 开 brainstorming + plan + TDD
-  ├─ 简单修 Bug、重构 → 关掉 brainstorming，只保留 review + verify
-  └─ 关键: 不要无脑全开
+评测过程中实际采用的叠加方式：
 
-Step 3: agent-harness-kit（关键节点）
-  └─ PR merge 前、安全审计时跑 10 维评审
-  └─ 频率低、价值高
-```
+1. **HarnessForge init** — 先把项目变成 Agent Ready，这步没有额外成本
+2. **Superpowers 插件** — 在需求模糊的新功能上全开，简单任务上关掉 brainstorming，保留 review + verify
+3. **agent-harness-kit** — 只在关键节点用（PR review、安全审计），频率低价值高
 
-### 4.3 分场景选择矩阵
+### 4.3 不同场景在评测中的表现
 
-| 场景 | 推荐 Harness | 原因 |
+| 场景 | 评测中领先的 Harness | 数据 |
 |------|:----------:|------|
-| 简单 CRUD / 配置变更 | 关掉 Harness | L1 数据：Harness = 纯开销 |
-| 算法实现（限流/加密/编码） | Superpowers | TDD 在算法类任务上最强 |
-| 多组件协作（认证/文件上传/消息） | Gstack | 角色分工覆盖不同关注面 |
-| API 设计先行 | OpenSpec | Spec 驱动在 API 设计上优势明显 |
-| 性能优化 / Bug 修复 | Gstack | QA 角色推动"验证是否真的修好了" |
-| 存量代码重构 | Baseline 即可 | L3 数据：裸 Agent 一次做对 |
-| 安全敏感功能 | kit 10 维 + 任意 Harness | 安全是专项，不是流程能兜底的 |
+| 简单 CRUD / 配置变更 | 各组同分 | L1 数据：四组 95/90，Harness 无差异 |
+| 算法实现（限流/加密/编码） | **Superpowers** | 任务⑥ 唯一满分，TDD 在算法上最强 |
+| 多组件协作（认证/文件上传/消息） | **Gstack** | 任务⑦⑨ 多角色覆盖不同关注面 |
+| API 设计先行 | **OpenSpec** | 任务③④ 领先，Spec 驱动在接口定义上占优 |
+| 性能优化 / Bug 修复 | **Gstack** | 任务⑩ 领先 25 分，QA 推动"验证是否真的修好" |
+| 存量代码重构 | 各组同分 | L3 数据：四组 100，裸 Agent 一次做对 |
+| 全局重构（改旧代码） | 全部落后 | 任务⑫ 四组 70 分，所有 Harness 都推不动 Agent 改旧代码 |
 
-### 4.4 不要做的事
+### 4.4 关于 Superpowers 的得分
 
-1. **不要在所有任务上开 Superpowers 全流程** → Token 浪费 +44%，得分不增
-2. **不要禁止 Agent 向用户提问** → 那是 Harness 的核心价值。自动评测中 Superpowers 得分=裸Agent，就因为禁止了提问。补做实验证明：允许提问后架构完全不同
-3. **不要期待 Harness 解决"全局重构畏难"** → 当前所有 Harness 都推不动 Agent 改旧代码
-4. **不要在简单任务上用 brainstorming** → L1 任务上它就是纯成本
-5. **不要只看得分** → 文档产出、跨会话记忆这些 Soft Value 在单次评分中不体现
+Superpowers 在本次评测中总分与 Baseline 持平（1045），但过程评测揭示了原因：自动评测中 Agent 被禁止提问，brainstorming 退化成了自问自答。补做的交互实验证明，允许用户参与后架构决策完全不同。
 
-### 4.5 团队落地路线
+另外 Superpowers 的 spec/plan 文档产出是跨会话的记忆——单次评测测不出这个价值，但在多轮迭代和长期维护中会逐渐显现。
 
-```
-Week 1: HarnessForge init → 选 1-2 个项目试点
-Week 2: 仅在"需求模糊的新功能"上开 Superpowers，记得让 Agent 提问
-Week 3: 在关键 PR 上试用 kit 深度评审
-Week 4: 收集数据 → 每个人记录"Harness 帮我发现了什么"
-Month 2: 团队回顾 → 形成自己的"何时用哪个"内部指南
-```
+### 4.5 一句话总结
+
+> **Harness 不能把烂模型变好，但能让同一个模型在正确的场景下做得更深、更稳、更可追溯。**
+>
+> 评测数据表明：Gstack 在大多数场景得分最高，但 Superpowers 在算法类任务上无人能及，OpenSpec 在 API 设计上有系统性优势。裸 Agent 永远是小任务的正确答案。把三个工具叠加、按场景切换，而不是指望一个 Harness 包打天下。
 
 ---
 
