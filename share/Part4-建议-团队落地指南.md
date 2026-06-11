@@ -33,7 +33,7 @@ HarnessForge          Superpowers            agent-harness-kit
 评测过程中实际采用的叠加方式：
 
 1. **HarnessForge init** — 先把项目变成 Agent Ready，这步没有额外成本
-2. **Superpowers 插件** — 在需求模糊的新功能上全开，简单任务上关掉 brainstorming，保留 review + verify
+2. **Superpowers 插件** — 评测中在需求模糊的任务上开了全流程，简单任务上只保留了 review + verify，关掉了 brainstorming
 3. **agent-harness-kit** — 只在关键节点用（PR review、安全审计），频率低价值高
 
 ---
@@ -77,7 +77,7 @@ Superpowers 在本次评测中总分与 Baseline 持平（1045），但过程评
 
 > **Harness 不能把烂模型变好，但能让同一个模型在正确的场景下做得更深、更稳、更可追溯。**
 >
-> 评测数据表明：Gstack 在大多数场景得分最高，但 Superpowers 在算法类任务上无人能及，OpenSpec 在 API 设计上有系统性优势。裸 Agent 永远是小任务的正确答案。把三个工具叠加、按场景切换，而不是指望一个 Harness 包打天下。
+> 评测数据表明：Gstack 在大多数场景得分最高，但 Superpowers 在算法类任务上无人能及，OpenSpec 在 API 设计上有系统性优势。裸 Agent 永远是小任务的正确答案。三个工具叠加使用、按场景切换的方式，比单一 Harness 的效果更好。
 
 ---
 
