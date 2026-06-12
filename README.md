@@ -23,47 +23,52 @@ Harness Engineering 是指围绕 AI 编码代理（Coding Agent）构建的**工
 ```
 Harness/
 ├── README.md                          ← 本文件
-├── plans/                             ← 调研文档 + 4 天冲刺计划
+├── docs/                              ← 全部文档（调研 + 记录 + 分享）
 │   ├── 01-概念与背景.md                ← 什么是 Harness Engineering
 │   ├── 02-工具调研与对比.md             ← 工具全景调研与横向对比
+│   ├── 03-工具实操指南/                ← 各工具实操指南
+│   │   ├── 03-01-Superpowers.md
+│   │   ├── 03-02-Agent-Harness-Kit.md
+│   │   └── 03-03-HarnessForge.md
 │   ├── 04-实践对比分析.md               ← 实操对比分析
 │   ├── 05-团队使用建议.md               ← 团队落地建议与路线图
 │   ├── 06-评测方案设计.md               ← 评测框架设计
-│   └── PLAN.md                        ← 4 天冲刺详细任务表
-├── records/                           ← Day 1 实操记录
-│   ├── 任务③-Superpowers全流程总结.md
+│   ├── PLAN.md                        ← 4 天冲刺详细任务表
+│   ├── 任务③-Superpowers全流程总结.md    ← Day 1 实操记录
 │   ├── 任务④-裸Agent对比记录.md
 │   ├── 任务⑤-kit-10维度评审.md
 │   ├── 任务⑥-HarnessForge试用.md
 │   ├── 任务⑦-Superpowers-L2分页排序.md
-│   └── 任务⑧-踩坑清单.md
+│   ├── 任务⑧-踩坑清单.md
+│   ├── Part1-问题.md                   ← 团队分享：问题背景
+│   ├── Part2-方法.md                   ← 团队分享：评测方法论
+│   ├── Part3-数据.md                   ← 团队分享：48 条数据 + 10 大发现
+│   └── Part4-总结.md                   ← 团队分享：综合结论
 ├── eval/                              ← 评测框架
 │   ├── scripts/                       ← 自动化脚本
-│   │   ├── run-eval.sh                ← 主评测 runner（支持 l1/l2a/l2b/l3a/l3b/l4 模式）
+│   │   ├── run-eval.sh                ← 主评测 runner（支持 l1/l2a/l2b/l3/l4 模式）
 │   │   ├── verify.sh                  ← 评分脚本（编译 gate + 测试 + 任务断言）
 │   │   ├── rebuild-csv.sh             ← 批量重验 + CSV 重建
 │   │   ├── run-provider.sh            ← 单 Provider 执行器
 │   │   └── score.js                   ← 评分逻辑（JS）
 │   ├── providers/                     ← Provider 配置文件（harness 指令）
-│   ├── tasks/                         ← 12 个任务 spec（中文）
+│   ├── tasks/                         ← 12 个任务 spec（YAML）
+│   ├── workspaces/                    ← 12 个定量评测工作区
+│   │   ├── 01-validation/ ~ 12-flaky-test/
 │   ├── results/                       ← 评测产出
 │   │   ├── eval-results.csv           ← 48 条完整数据（12 任务 × 4 Provider）
 │   │   ├── README.md                  ← 评测总结（得分表 + 5 大核心发现）
 │   │   ├── task-01-validation.md ~ task-12-flaky-test.md  ← 12 篇逐任务分析
-│   │   └── process-analysis-url-shortener.md               ← 过程评测三轮对比
+│   │   ├── process-analysis-url-shortener.md               ← 过程评测三轮对比
+│   │   └── charts/                    ← 4 张可视化图表（PNG）
 │   └── promptfooconfig.yaml           ← Promptfoo 框架配置
-├── workspaces/                        ← 所有工作区
-│   ├── 01-book-api/                   ← Superpowers 全流程（L1 校验 + L2 分页排序）
-│   ├── 02-book-api-bare/              ← 裸 Agent 对照
-│   ├── 03-book-api-kit-review/        ← agent-harness-kit 评审
-│   ├── 04-book-api-forge/             ← HarnessForge 试用
-│   ├── url-shortener-bare/            ← 过程评测：裸 Agent（13 测试）
-│   └── url-shortener-harness/         ← 过程评测：Harness 交互版（19 测试）
-└── share/                             ← 团队分享文档
-    ├── Part1-问题.md                   ← 问题背景 + 两则案例
-    ├── Part2-方法.md                   ← 评测方法论
-    ├── Part3-数据.md                   ← 48 条数据 + 10 大发现
-    └── Part4-总结.md                   ← 综合结论
+└── trials/                            ← Day 1 试用 + 过程评测工作区
+    ├── 01-book-api/                   ← Superpowers 全流程（L1 校验 + L2 分页排序）
+    ├── 02-book-api-bare/              ← 裸 Agent 对照
+    ├── 03-book-api-kit-review/        ← agent-harness-kit 评审
+    ├── 04-book-api-forge/             ← HarnessForge 试用
+    ├── url-shortener-bare/            ← 过程评测：裸 Agent（13 测试）
+    └── url-shortener-harness/         ← 过程评测：Harness 交互版（19 测试）
 ```
 
 ---

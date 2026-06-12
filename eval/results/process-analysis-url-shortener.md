@@ -199,10 +199,10 @@ Harness交互: 对话开销较大，但用户输入减少了"自问自答"的无
 
 | 数据 | 位置 |
 |------|------|
-| 裸Agent 源码 | `workspaces/url-shortener-bare/src/` |
-| Harness自动 源码 | `workspaces/url-shortener-harness/src/`（第一次跑的） |
-| Harness交互 源码 | `workspaces/url-shortener-harness/src/`（覆盖后的） |
-| 裸Agent 会话日志 | `~/.claude/projects/d--Work-kleaves-Harness-workspaces-url-shortener-bare/69aceaf1-*.jsonl` |
-| Harness自动 会话日志 | `~/.claude/projects/d--Work-kleaves-Harness-workspaces-url-shortener-harness/fb3921e4-*.jsonl` |
-| Harness交互 会话日志 | `~/.claude/projects/d--Work-kleaves-Harness-workspaces-url-shortener-harness/56ca26e7-*.jsonl` |
-| 裸Agent 输出 log | `workspaces/url-shortener-bare-output.log` |
+| 裸Agent 源码 | `trials/url-shortener-bare/src/` |
+| Harness自动 源码 | `trials/url-shortener-harness/src/`（第一次跑的） |
+| Harness交互 源码 | `trials/url-shortener-harness/src/`（覆盖后的） |
+| 裸Agent 会话日志 | `~/.claude/projects/d--Work-kleaves-Harness-trials-url-shortener-bare/69aceaf1-*.jsonl` |
+| Harness自动 会话日志 | `~/.claude/projects/d--Work-kleaves-Harness-trials-url-shortener-harness/fb3921e4-*.jsonl` |
+| Harness交互 会话日志 | `~/.claude/projects/d--Work-kleaves-Harness-trials-url-shortener-harness/56ca26e7-*.jsonl` |
+| 裸Agent 输出 log | `trials/url-shortener-bare-output.log` |
