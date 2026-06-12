@@ -126,5 +126,5 @@ Agent 自选了 Base62 自增 ID → 短码可预测，暴露内部计数
 > - Book API Superpowers 版本：`trials/01-book-api/`
 > - 短链接服务裸 Agent 版本：`trials/url-shortener-bare/`
 > - 短链接服务 Harness 版本：`trials/url-shortener-harness/`
-> - Day 1 对照实验记录：`docs/任务④-裸Agent对比记录.md`
+> - Day 1 对照实验记录：`docs/records/任务④-裸Agent对比记录.md`
 > - 过程评测完整分析：`eval/results/process-analysis-url-shortener.md`
