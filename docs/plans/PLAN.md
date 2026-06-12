@@ -1,8 +1,9 @@
-# PLAN — 四天冲刺执行计划
+# PLAN — 冲刺执行计划（实际执行记录）
 
 > **目标**: 产出一场有数据支撑的 Harness Engineering 团队技术分享
-> **时间**: 4 个工作日 × 7h = 28h
-> **核心原则**: 先跑通再规模化、全量评测用数据说话、最终交付是一场分享
+> **时间**: 3 个工作日（2026-06-09 ~ 2026-06-11）+ 1 天收尾（2026-06-12）
+> **实际规模**: 12 任务 × 4 Provider × 1 次运行 = 48 条记录（受限于单终端串行执行时间）
+> **核心原则**: 先跑通再规模化、全量评测用数据说话、最终交付是分享文档
 
 ---
 
@@ -10,158 +11,156 @@
 
 ```
 Day 1                  Day 2                  Day 3                  Day 4
-工具深潜 + 亲手跑通     全量评测 L1-L2          全量评测 L3-L4          数据 → 故事 → 分享
+工具深潜 + 亲手跑通     评测基础设施 + L1+L2    L3+L4 全量 + 过程评测   可视化 + 文档收尾
+                                             + 分享文档
 ```
 
 ---
 
-## Day 1 — 工具深潜，亲手跑通
+## Day 1 — 工具深潜，亲手跑通 ✅
 
 **目标**: 建立亲身感受，不追求数据，追求理解。
 
-| # | 任务 | 时长 |
-|---|------|:----:|
-| 1 | 速读 [01-概念与背景.md](01-概念与背景.md) + [02-工具调研与对比.md](02-工具调研与对比.md) | 1h |
-| 2 | 装好三个工具（已完成 ✅） | — |
-| 3 | 用 Superpowers 跑一个 L1 功能（DTO Validation），完整走 brainstorming → plan → TDD → execute → review → finish | 1.5h |
-| 4 | 同一功能不开 Superpowers（裸 Agent），对比差异 | 1h |
-| 5 | 用 agent-harness-kit 跑通 10 维度评审 | 1h |
-| 6 | 试用 HarnessForge `init` | 0.5h |
-| 7 | 用 Superpowers 跑一个 L2 功能（分页排序），记录数据作基线 | 0.5h |
-| 8 | 整理踩坑清单 | 0.5h |
+| # | 任务 | 实际执行 |
+|---|------|------|
+| 1 | 速读 01-概念与背景 + 02-工具调研与对比 | 完成 |
+| 2 | 装好三个工具 | Superpowers / agent-harness-kit / HarnessForge 安装完成 |
+| 3 | Superpowers 跑 L1（DTO Validation）完整流程 | 完成。brainstorming 6 轮 → 三选一 → TDD → review，发现 @Digits 与 Double 不兼容 |
+| 4 | 同一功能裸 Agent 对比 | 完成。架构一致，但 Superpowers 校验深度更深（ISBN/PriceFormat/PUT 部分更新） |
+| 5 | agent-harness-kit 10 维度评审 | 完成。12 个问题（严重3/中等4/轻微5），覆盖 Double 精度、save() 副作用等 |
+| 6 | HarnessForge init 试用 | 完成。~20 个配置文件，发现 inspect 框架检测漏检 Spring Boot |
+| 7 | Superpowers 跑 L2（分页排序） | 完成。brainstorming 5 轮 → TDD 23 测试，遇到子代理 DeepSeek API 不兼容 |
+| 8 | 整理踩坑清单 | 完成。11 条（阻塞2/阻碍5/轻度4） |
 
 **检查点**:
-- [ ] Superpowers 全流程跑通 ≥1 次
-- [ ] 裸 Agent vs Superpowers 对比感受已记录
-- [ ] agent-harness-kit 10 维度评审跑通 ≥1 次
-- [ ] HarnessForge init 已试用
-- [ ] 踩坑清单 ≥3 条
+- [x] Superpowers 全流程跑通 ≥1 次
+- [x] 裸 Agent vs Superpowers 对比感受已记录
+- [x] agent-harness-kit 10 维度评审跑通 ≥1 次
+- [x] HarnessForge init 已试用
+- [x] 踩坑清单 11 条
 
 ---
 
-## Day 2 — 评测基础设施 + Pilot + L1/L2 全量跑
+## Day 2 — 评测基础设施 + Pilot + L1/L2 全量跑 ✅
 
-> **策略调整 (Pilot 后)**: Pilot 显示 L2 区分度仅 3 分（85-88），L3/L4 才是 Harness 差距所在。
-> L1/L2 各减为 1 次重复，释放时间给 L3/L4 各跑 3 次。
+> **策略调整**: 单终端串行执行，各任务只跑 1 次（而非原计划的多终端并行 × 3 次重复），
+> 释放时间给 L3/L4 和过程评测。
 
-**目标**: 搭好框架，跑通 Pilot，完成 L1+L2，产出 28 条基线数据。开始搭建 L3 workspace。
+**目标**: 搭好框架，跑通 Pilot，完成 L1+L2，修复工具链问题。
 
-| # | 任务 | 时长 |
-|---|------|:----:|
-| 1 | 处理 Day 1 踩坑清单 | 0.5h |
-| 2 | 搭建评测环境：6 个 Spring Boot workspace + promptfooconfig.yaml（4 Provider）+ verify.sh | 1h |
-| 3 | **Pilot**: 跑任务③（分页排序），4 组 × 1 次，验证全链路 | 0.5h |
-| 4 | 修复 Pilot 问题（权限/评分提取/prompt） | 0.5h |
-| 5 | **L1 批量跑**: 任务①②，4 组 × 2 任务 × **1 次** = 8 条 | 0.5h |
-| 6 | **L2 批量跑**: 任务③④⑤⑥，4 组 × 4 任务 × **1 次** = 16 条 | 1.5h |
-| 7 | 搭建 L3/L4 workspace 骨架（⑦-⑫） | 1.5h |
-| 8 | 抽查结果，标记异常 | 0.5h |
+| # | 任务 | 实际执行 |
+|---|------|------|
+| 1 | 处理 Day 1 踩坑清单 | CRLF 修复、.gitattributes、mvn PATH 问题 |
+| 2 | 搭建评测环境 | 12 个 workspace + run-eval.sh + verify.sh + promptfoo 配置 |
+| 3 | Pilot: 任务③ 分页排序 | 4 组 × 1 次，验证全链路通过 |
+| 4 | 修复 CRLF 导致全任务 score=0 | Git CRLF→LF 破坏 bash 重定向，sed 批量修复 + .gitattributes 锁定 |
+| 5 | L1 批量跑: ①② | 4 组 × 2 任务 × 1 次 = 8 条 |
+| 6 | L2 批量跑: ③④⑤⑥ | 4 组 × 4 任务 × 1 次 = 16 条，分 l2a/l2b 两终端并行 |
+| 7 | verify.sh 加固诊断 | 新增 maven stderr 捕获、多路径 mvn 探测 |
+| 8 | 编写 rebuild-csv.sh | 批量重验 + token 提取 + CSV 重建脚本 |
 
 **检查点**:
-- [x] Promptfoo 配置完整（4 Provider × 6 tasks × 验证脚本）
+- [x] CRLF 问题修复，eval 脚本全部可运行
 - [x] Pilot 通过（4/4 全链路跑通）
-- [ ] L1: 8 条 ✅
-- [ ] L2: 16 条 ✅
-- [ ] L3/L4 workspace 骨架就绪
-- [ ] 累计: 28 条（为新方案的 29%）
+- [x] L1: 8 条
+- [x] L2: 16 条
+- [x] 累计: 26 条（含任务⑩⑪单独测试）
 
 ---
 
-## Day 3 — L3/L4 全量跑（各 3 次）+ 数据汇总
+## Day 3 — L3/L4 全量 + 过程评测 + 分享文档 ✅
 
-> **策略**: Pilot 证明 Harness 差异在复杂任务上才明显。L3×3 + L4×3 = 72 条，占总数据 75%。
+> **实际执行**: 跑完 L3+L4 全量，补充过程评测（URL 短链接三轮对比），
+> 编写逐任务分析 MD 和分享文档 Part1-4。
 
-**目标**: 跑完复杂任务 3 次重复，累计 ≥96 条。数据汇总+初步分析。
+**目标**: 跑完所有任务，汇总数据，产出一套完整的分析文档和分享材料。
 
-| # | 任务 | 时长 |
-|---|------|:----:|
-| 1 | 处理 Day 2 异常任务 | 0.5h |
-| 2 | **L3 批量跑**: 任务⑦⑧⑨⑩，4 组 × 4 任务 × **3 次** = 48 条 | 3.5h |
-| 3 | 午饭 + 后台继续 L3 | — |
-| 4 | **L4 批量跑**: 任务⑪⑫，4 组 × 2 任务 × **3 次** = 24 条（30min timeout） | 2h |
-| 5 | 数据汇总：导出 CSV → 评分 → 对比表 | 1h |
-| 6 | 初步分析：标注 3-5 个核心发现作为分享故事线 | 0.5h |
+| # | 任务 | 实际执行 |
+|---|------|------|
+| 1 | L3 批量跑: ⑦⑧⑨⑩ | 4 组 × 4 任务 × 1 次 = 16 条 |
+| 2 | L4 批量跑: ⑪⑫ | 4 组 × 2 任务 × 1 次 = 8 条，补齐后共 48 条 |
+| 3 | 全局得分表汇总 | Gstack 1090 > OpenSpec 1065 > Baseline = Superpowers 1045 |
+| 4 | 12 篇逐任务分析 MD | task-01 ~ task-12，每篇分析各组差异和失败模式 |
+| 5 | 过程评测: URL 短链接三轮对比 | 裸Agent vs Harness自动(禁止交互) vs Harness交互(允许3轮提问) |
+| 6 | 过程评测核心发现 | 自动 Harness 与裸Agent 架构选型完全一致；用户交互彻底改变核心决策 |
+| 7 | 分享文档 Part1-4 | 问题→方法→数据→总结，多轮打磨去除指导性语言 |
+| 8 | README.md 更新 | 覆盖 Day 1-3 全量内容 |
 
 **检查点**:
-- [ ] L3: 48 条 ✅
-- [ ] L4: 24 条 ✅
-- [ ] 累计: ≥96 条（L1/L2 24 条 + L3/L4 72 条）
-- [ ] 核心发现 ≥3 个
+- [x] 48 条完整数据
+- [x] Gstack 总分第一（1090），Superpowers = Baseline（1045）
+- [x] 12 篇任务分析 MD
+- [x] 过程评测三轮对比完成
+- [x] 分享文档 Part1-4 定稿
 
 ---
 
-## Day 4 — 数据可视化 + Slide + 分享
+## Day 4 — 数据可视化 + 文档收尾 ✅
 
-**目标**: 把数据变成故事，完成团队分享。
+> **实际执行**: 生成可视化图表并嵌入分享文档，整理目录结构。
+> PPT/Slide 制作用 Markdown 分享文档替代。
 
-| # | 任务 | 时长 |
-|---|------|:----:|
-| 1 | 数据可视化：柱状图 + 折线趋势 + 散点图 + 误差棒（4 张核心图表） | 1h |
-| 2 | Slide 制作（15-20 页），结构见下方大纲 | 1h |
-| 3 | Demo 准备：3 分钟实操录屏或 Live Demo 环境 | 1h |
-| 4 | 午饭 + Slide 自审 | — |
-| 5 | 试讲 + 打磨 | 1h |
-| 6 | **🎤 团队分享**（45min + 15min Q&A） | 1h |
-| 7 | 收尾：归档 Slide / 数据 / Q&A | 1h |
+**目标**: 把数据变成可视化图表，完善仓库结构。
+
+| # | 任务 | 实际执行 |
+|---|------|------|
+| 1 | Python matplotlib 出 4 张图 | 柱状图(总分对比)、趋势线(L1→L4)、散点图(Token效率)、热力图(12×4) |
+| 2 | 图表嵌入分享文档 | Part3 嵌入全部 4 张、Part4 引用趋势图 |
+| 3 | 目录整理 | records/plans/share 合并为 docs/plans/records/share，workspaces/ 重命名为 trials/ |
+| 4 | plans 文档修正 | 将原始计划文档对齐实际执行结果 |
 
 **检查点**:
-- [ ] 4 张图表完成
-- [ ] Slide 15-20 页
-- [ ] Demo 素材就绪
-- [ ] 分享完成 + Q&A 有记录
-- [ ] 产出已归档
+- [x] 4 张图表 PNG 生成
+- [x] 图表嵌入 Markdown 分享文档
+- [x] 目录结构整理完成
+- [x] plans 文档更新为实际执行记录
 
 ---
 
-## 🎯 产出清单
+## 🎯 实际产出清单
 
-| 产出 | 格式 |
-|------|------|
-| 全量评测数据 ≥96 条（L1 8 + L2 16 + L3 48 + L4 24） | CSV + SQLite |
-| 评测分析报告 + 4 张图表 | Markdown |
-| 分享 Slide 15-20 页 | PPT / PDF |
-| Demo 录屏 3 分钟 | MP4 / GIF |
-| Q&A 记录 | Markdown |
+| 产出 | 格式 | 说明 |
+|------|------|------|
+| 全量评测数据 48 条 | CSV | eval/results/eval-results.csv |
+| 评测总结报告 | Markdown | eval/results/README.md |
+| 逐任务分析 12 篇 | Markdown | eval/results/task-01 ~ task-12 |
+| 过程评测分析 | Markdown | eval/results/process-analysis-url-shortener.md |
+| 4 张可视化图表 | PNG | eval/results/charts/ (柱状/趋势/散点/热力图) |
+| 分享文档 4 篇 | Markdown | docs/share/Part1-问题 ~ Part4-总结 |
+| Day 1 实操记录 6 篇 | Markdown | docs/records/ |
+| 调研规划文档 9 篇 | Markdown | docs/plans/ |
 
 ---
 
-## 📐 Slide 大纲
+## 📐 实际分享结构（对应 docs/share/Part1-4）
 
 ```
-Part 1: 为什么 (5 min, 3-4 页)
-  1. 标题: Harness Engineering — 让 AI 编码从"能用"到"可靠"
-  2. 论点: Agent = 模型 + Harness
-  3. 数据: Harness 优化 +13.7% vs 模型升级 +5.2%
-  4. 痛点: Agent 忘记上下文 / 无测试 / 反复犯错
+Part1-问题: AI 编码的瓶颈从模型转向工程化
+  - 两则翻车案例（Book API 参数校验 + URL 短链接裸 Agent）
+  - 核心论点: Agent = 模型 × Harness
 
-Part 2: 有什么 (10 min, 4-5 页)
-  5. 三件套全景: Superpowers / agent-harness-kit / HarnessForge
-  6. Superpowers 深度: 14 技能全流程
-  7. agent-harness-kit 深度: 10 维度评审 + Failures→Rules
-  8. HarnessForge: 3 秒初始化
+Part2-方法: 12 任务 × 4 组对照实验
+  - 4 组 Provider: Baseline / Superpowers / Gstack / OpenSpec
+  - 12 个 Spring Boot 任务 L1→L4
+  - 评分体系 + 自动化流程 + 过程评测补充
 
-Part 3: 数据怎么说 (20 min, 5-6 页)
-  9. 评测设计: 12 任务 × 4 组 Harness
-  10. 总分排名柱状图 ← 全场核心
-  11. L1→L4 折线趋势
-  12. Token vs 质量散点图
-  13. 稳定性误差棒
-  14. 典型案例 before/after
+Part3-数据: 10 个关键发现
+  - 总分排名: Gstack 1090 > OpenSpec 1065 > Baseline = Superpowers 1045
+  - 过程评测: 禁止交互 = 剥夺 Harness 核心价值
+  - 4 张图表（柱状/趋势/散点/热力图）
 
-Part 4: 建议 (10 min, 3-4 页)
-  15. 推荐组合: 个人 Superpowers，团队 + kit
-  16. 上手路径: 安装 → 跑通 L2 → 感受差异
-  17. 注意事项 + Q&A
+Part4-总结: 不同场景下各组表现差异
+  - 算法类 Superpowers 最强，API 设计 OpenSpec 占优，多组件 Gstack 领先
+  - 所有 Harness 都怕全局重构（任务⑫ 四组 70 分）
 ```
 
 ---
 
-## ⚠️ 铁律
+## ⚠️ 实际踩坑与教训
 
-1. Day 1 必须亲手跑通全流程
-2. Day 2 上午必须做完 Pilot
-3. 评测任务并行提交，4 个 Provider 同时跑不同任务
-4. L3/L4 设 30min timeout
-5. **≥96 条即可支撑结论**，不追满 144。L3/L4 各 3 次重复确保统计显著性
-6. Slide 用数据讲故事，每页回答一个问题
-7. Demo 比 Slide 有说服力 — 3 分钟实操 > 10 页文字
+1. CRLF 行尾符导致全任务 score=0 — Git on Windows 默认行为，.gitattributes 锁定 LF 解决
+2. WSL 非交互 shell 下 mvn 找不到 — 需在 verify.sh 中多路径探测
+3. 子代理与 DeepSeek API 不兼容 — `reasoning_effort` 参数冲突，降级为 Inline Execution
+4. 单终端串行执行无法达到 144 条 — 48 条已足够支撑结论
+5. 自动评测中禁止 AskUserQuestion 系统性低估了 Harness 价值 — 过程评测证实
+6. 所有 Agent 倾向"加新代码"而非"改旧代码" — 任务⑫ 四组全败于此
