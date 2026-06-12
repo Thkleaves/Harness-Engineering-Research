@@ -19,6 +19,8 @@
 | ⑪ | **并发预订** | 75 | **85** | 75 | 75 | Gstack |
 | ⑫ | Flaky 测试 | 70 | 70 | 70 | 70 | — |
 
+![12任务 × 4 Provider 得分热力图](../eval/results/charts/04-score-heatmap.png)
+
 ---
 
 ## 3.2 总分排名
@@ -33,6 +35,8 @@
 > ⚠️ **Superpowers = Baseline = 1045 分。**
 >
 > 严谨的 brainstorming → plan → TDD → review → verify 全流程，在 12 个任务的**综合得分**上没有超过裸 Agent。
+
+![12任务总分对比 — Gstack 1090 第一，Superpowers = Baseline = 1045](../eval/results/charts/01-total-scores.png)
 
 ---
 
@@ -71,6 +75,8 @@ L4 (高级任务 ⑩⑪⑫)
 
 **规律：任务越难、需求越模糊，Harness 的价值越大。但价值来自"多视角覆盖"，不是"多步骤流程"。**
 
+![12任务得分趋势 L1→L4 — Gstack 在 N+1 修复处拉开明显差距](../eval/results/charts/02-score-trend.png)
+
 ---
 
 ## 3.4 Token 效率对比
@@ -83,6 +89,8 @@ L4 (高级任务 ⑩⑪⑫)
 | Superpowers | 991K | 7,558s | 87.1 | 1.05 |
 
 **Superpowers 消耗了最多的 Token（+44% vs Gstack）和最长的耗时（+53% vs Gstack），得分与 Baseline 持平。千 Token 效率不到 Gstack 的 2/3。**
+
+![Token 效率散点：消耗 vs 得分，气泡大小 = 耗时](../eval/results/charts/03-token-efficiency.png)
 
 ---
 

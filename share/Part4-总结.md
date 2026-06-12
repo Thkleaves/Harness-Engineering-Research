@@ -51,6 +51,8 @@ HarnessForge          Superpowers            agent-harness-kit
 | 需求极度模糊的新功能 | 数据不足 | 过程评测表明，需要用户交互才能发挥 Harness 价值 |
 | 全局重构（改旧代码） | 全部落后 | 任务⑫ 四组 70 分，所有 Harness 都推不动 Agent 改旧代码 |
 
+![12任务 × 4 Provider 得分趋势 — 不同场景下各组差异显著](../eval/results/charts/02-score-trend.png)
+
 ---
 
 ### 关于 Superpowers 的得分
