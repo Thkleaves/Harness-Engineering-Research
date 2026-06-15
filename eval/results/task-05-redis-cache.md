@@ -10,6 +10,7 @@
 | Baseline | 80 | 336s | 47.6K / 14.2K |
 | **Superpowers** | **90** | **809s** | 91.3K / 22.2K |
 | **Gstack** | **90** | **395s** | 52.2K / 15.7K |
+| wow-harness | 90 | — | — |
 | OpenSpec | 80 | 306s | 47.1K / 9.8K |
 
 ## 分析
@@ -20,6 +21,8 @@
 - **OpenSpec 丢分**：Spec 驱动可能过度关注缓存接口定义，忽略了 Spring 缓存配置细节
 - **Gstack 90 分**：DevOps 角色关注配置项（TTL），Engineer 角色实现代码，协同覆盖更全
 - **Superpowers 90 分**：TDD 流程确保测试覆盖，但流程开销大（13.5min / 113K token）
+
+- **wow-harness (90)** 与 Gstack/Superpowers 并列最高，hooks 约束确保 TTL 配置未被遗漏（vs Baseline 80）
 
 ## 结论
 涉及中间件集成 + 配置 + 测试的场景，Harness（尤其在 DevOps 角色下）比裸 Agent 覆盖更全面。Superpowers 得分与 Gstack 持平但 token 消耗翻倍。

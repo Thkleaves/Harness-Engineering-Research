@@ -20,5 +20,7 @@ OpenSpec 以 95 分领先。差异在于 UserSummary DTO 的 password 泄露检�
 - **Superpowers** TDD 流程生成了更多代码（28K output），但没有带来额外得分
 - **Baseline** 一次过，无流程开销
 
+- **wow-harness (95)** 与 OpenSpec 并列最高，hooks 治理机制防止了排序白名单遗漏
+
 ## 结论
 L2 任务开始出现得分分化。OpenSpec 的"先写 Spec 定义接口"方式在分页这种 API 设计任务上有优势。Superpowers 的流程优势在此任务上未体现。

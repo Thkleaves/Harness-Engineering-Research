@@ -9,6 +9,7 @@
 |----------|:-----:|:--------:|---------------|
 | Baseline | 75 | 387s | 43.9K / 18.7K |
 | **Gstack** | **85** | **330s** | 41.0K / 13.6K |
+| wow-harness | 85 | — | — |
 | OpenSpec | 75 | 1051s | 62.9K / 48.9K |
 | Superpowers | 75 | 503s | 100.0K / 20.8K |
 
@@ -31,6 +32,8 @@ Gstack 以 85 分领先，是**唯一正确处理 OptimisticLockException 的组
 - **Gstack 最均衡**：330s 最快，且 Engineering + QA 的组合确保了实现+测试的完整性
 - **OpenSpec 耗时最长**（17.5min）：Spec 中可能过度设计了并发模型，实际代码产出并未更优
 - **无人加 database index**：四组都漏了 5 分的数据库索引
+
+- **wow-harness (85)** 与 Gstack 并列最高（+10 vs Baseline），@Version 乐观锁 + 重试 + 100 线程并发测试覆盖完整
 
 ## 结论
 并发安全是"80% 容易、20% 难"的任务——大多数组完成了乐观锁本身，但只有 Gstack 的 Engineer/QA 组合补上了异常处理。这说明 Harness 价值在于**覆盖同一问题的不同角色视角**，而非流程步骤的多少。

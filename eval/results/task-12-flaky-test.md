@@ -10,6 +10,7 @@
 | Baseline | 70 | 324s | 38.0K / 14.6K |
 | Superpowers | 70 | 412s | 61.1K / 15.5K |
 | Gstack | 70 | 473s | 53.7K / 16.3K |
+| wow-harness | 70 | — | — |
 | OpenSpec | 70 | 243s | 41.8K / 11.5K |
 
 ## 诊断详情

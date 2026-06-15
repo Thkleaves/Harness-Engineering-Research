@@ -10,6 +10,7 @@
 | Baseline | 90 | 992s | 80.8K / 35.9K |
 | Superpowers | 90 | 686s | 75.1K / 27.1K |
 | Gstack | 90 | 488s | 53.0K / 19.4K |
+| wow-harness | 90 | — | — |
 | OpenSpec | 90 | 1206s | 75.1K / 52.2K |
 
 ## 分析
