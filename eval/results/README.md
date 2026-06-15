@@ -49,8 +49,8 @@
 
 ### 核心发现
 
-#### 1. Superpowers 没有比裸 Agent 更好
-**Superpowers 总分 = Baseline 总分 = 1045**。严格的 brainstorming → plan → TDD → review 流程没有带来整体得分提升。在 12 个任务中，Superpowers 只在任务⑥限流上独秀（100 vs 90），但在任务⑦JWT认证上反被 Baseline 超越（95 vs 100）。
+#### 1. Superpowers 没有比裸 Agent 更好——软约束的天然上限
+**Superpowers 总分 = Baseline 总分 = 1045**。后续检查会话日志发现根因：Agent 平均每任务只调用了 3-4 个 Superpowers 技能（14 个可选）。CLAUDE.md 写了"必须用 TDD""必须用 review"，但 Agent 自主选择跳过——13 个技能中只有 brainstorming 和 writing-plans 被用了 12/12 次，TDD 用了 ~8/12 次，code-review 只用了 ~3/12 次。**软约束的遵从率恰好是 wow-harness 文档所说的 ~20%。** Superpowers 只在任务⑥限流上调用了 6 个技能（满分 100），在任务⑦JWT 认证上跳过了 review（丢分 95 vs Baseline 100）。
 
 #### 2. Gstack 是最优 Harness，wow-harness 紧追其后
 Gstack 总分最高（1090），wow-harness 次之（1085），两者仅差 5 分。Gstack 在 N+1 修复（+25）和并发预订（+10）上拉开差距——角色分工带来的**多视角覆盖同一问题**比流程步骤更有效。wow-harness 靠 hooks 治理 + CLAUDE.md 行为约束在分页排序、Redis 缓存、N+1 修复上均比 Baseline 提升了 10-15 分。
