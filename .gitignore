@@ -22,3 +22,10 @@ eval/tmp/
 
 # Logs
 *.log
+
+# wow-harness runtime (installed per-project, not source)
+.wow-harness/
+.claude/
+scripts/
+schemas/
+.towow/
