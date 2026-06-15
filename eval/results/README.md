@@ -137,3 +137,31 @@ Harness自动的代码更模块化、测试更多（17 vs 13），但在短码�
 
 - 12 任务得分分析：[task-01](task-01-validation.md) ~ [task-12](task-12-flaky-test.md)
 - 过程对比分析：[process-analysis-url-shortener.md](process-analysis-url-shortener.md)
+
+---
+
+## 四、评分框架改进（2026-06-15）
+
+### 发现的问题
+
+Reasonix 沙箱重跑 wow-harness 3 任务（01-validation / 02-actuator / 12-flaky-test）时发现 `verify.sh` 存在两处缺陷：
+
+#### 1. 任务⑫ `LocalDate.now` 误判（已修复）
+
+旧逻辑用 `grep "LocalDate.now"` 无法区分 Bug 代码 `LocalDate.now()` 和正确修复 `LocalDate.now(clock)`，导致所有 Provider 在该检查项上被永久扣 15 分。
+
+修复：改为 `grep "LocalDate\.now()"`（仅匹配空括号/无 Clock 参数）并过滤注释行。
+
+#### 2. 质量评分通用模板不适配所有任务（已修复）
+
+原来 12 个任务共用同一套质量检查（异常处理 + 输入校验 + 分层），但任务 07/09/12 天然没有 Controller 层或校验需求，结构性永远拿不到质量分。
+
+修复：每任务有独立的质量检查维度。例如：
+- 任务⑫：Clock 注入(5) + 多时区测试覆盖(5) + service+repo 分层(5)
+- 任务⑨：异步处理(5) + 错误重试(5) + 分层(5)
+
+### 影响
+
+- **历史排名不变**：所有 Provider 被同等扣分，相对排名不受影响
+- **任务⑫评分已修正**：原 70 分 → 修正后可到 100 分（若代码完全正确）
+- **Reasonix 沙箱验证**：3/3 任务 = 100/100（wow-harness 方法论 + 修正后评分）

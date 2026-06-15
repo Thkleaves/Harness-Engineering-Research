@@ -146,6 +146,8 @@ case "$TASK_ID" in
         check_test_contains "MockMvc\|TestRestTemplate\|WebTestClient" 5 "integration test style"
         # pom 有 validation (10)
         check_xml_contains "spring-boot-starter-validation" 10 "validation dependency"
+        # 测试覆盖 400 响应 (5)
+        check_test_contains "isBadRequest\|400\|BadRequest" 5 "test asserts 400 on invalid input"
         ;;
 
     02-actuator)
@@ -260,8 +262,10 @@ case "$TASK_ID" in
         check_any_file_contains "fixed\|Clock.fixed\|Instant.now" 10 "Clock.fixed() in test"
         check_any_file_contains "ZoneId\|ZoneOffset\|UTC\|Asia/Shanghai\|America/New_York" 10 "timezone handling"
         check_test_contains "UTC\|Asia/Shanghai\|America/New_York" 10 "multi-timezone test"
-        # 根因解释
-        if grep -rl "LocalDate.now\|时区\|timezone\|zone" src --include="*.java" 2>/dev/null | grep -v "test" | grep -v "import" | grep -q .; then
+        # 检查是否还有未修复的 LocalDate.now()（空括号）—— 排除注释行和 import
+        if grep -rn "LocalDate\.now()" src/main --include="*.java" 2>/dev/null \
+            | grep -v '^.*:[[:space:]]*\*' | grep -v '^.*://' \
+            | grep -q .; then
             echo "    0 still uses LocalDate.now() without Clock" >&2
         else
             TASK_SCORE=$((TASK_SCORE + 15))
@@ -278,29 +282,204 @@ esac
 SCORE=$((SCORE + TASK_SCORE))
 
 # ═══════════════════════════════════════════════
-# 代码质量 (0-15 分)
+# 代码质量 (0-15 分) — 按任务适配
 # ═══════════════════════════════════════════════
-echo "[verify] code quality..." >&2
+echo "[verify] code quality for '$TASK_ID'..." >&2
 
-# 异常处理
-if grep -rn "ExceptionHandler\|ControllerAdvice\|try.*catch" src/main --include="*.java" 2>/dev/null | grep -q .; then
-    QUALITY_SCORE=$((QUALITY_SCORE + 5))
-    echo "  +5 exception handling" >&2
-fi
-
-# 校验使用
-if grep -rn "@Valid\|@Validated\|@NotBlank\|@NotNull\|@Positive" src/main --include="*.java" 2>/dev/null | grep -q .; then
-    QUALITY_SCORE=$((QUALITY_SCORE + 5))
-    echo "  +5 input validation" >&2
-fi
-
-# 分层清晰度
-CONTROLLER_COUNT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
-SERVICE_COUNT=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
-if [ "$CONTROLLER_COUNT" -gt 0 ] && [ "$SERVICE_COUNT" -gt 0 ]; then
-    QUALITY_SCORE=$((QUALITY_SCORE + 5))
-    echo "  +5 layered architecture" >&2
-fi
+case "$TASK_ID" in
+    01-validation)
+        # 异常处理
+        if grep -rn "ExceptionHandler\|ControllerAdvice\|try.*catch" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 exception handling" >&2
+        fi
+        # 输入校验
+        if grep -rn "@Valid\|@Validated\|@NotBlank\|@NotNull\|@Positive" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 input validation" >&2
+        fi
+        # 分层清晰
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    02-actuator)
+        # 配置文件完整
+        if grep -q "management\|actuator\|health\|info" src/main/resources/application.yml 2>/dev/null; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 actuator yml config" >&2
+        fi
+        # Health 指标有详情
+        if grep -rn "withDetail\|\.detail" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 health indicator details" >&2
+        fi
+        # 分层清晰
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    03-pagination)
+        # 排序白名单安全
+        if grep -rn "ALLOWED\|whitelist\|白名单\|allowedSort\|SORTABLE" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 sort whitelist safety" >&2
+        fi
+        # 分页参数校验
+        if grep -rn "@Min\|@Max\|@Positive\|page\|size\|PageRequest" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 pagination parameter guard" >&2
+        fi
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    04-register)
+        # 状态机完整 (UNVERIFIED→ACTIVE)
+        if grep -rn "UNVERIFIED\|ACTIVE\|status" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 user status state machine" >&2
+        fi
+        # Token 安全 (UUID/random)
+        if grep -rn "UUID\|SecureRandom\|randomUUID" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 secure token generation" >&2
+        fi
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    05-redis-cache)
+        # 缓存配置 (TTL/yml)
+        if grep -rn "time-to-live\|ttl\|TTL\|expir\|cache.*config" src/main --include="*.java" src/main/resources/application.yml 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 cache TTL config" >&2
+        fi
+        # @EnableCaching
+        if grep -rn "@EnableCaching" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 @EnableCaching" >&2
+        fi
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    06-ratelimit)
+        # 线程安全 (ConcurrentHashMap)
+        if grep -rn "ConcurrentHashMap\|synchronized\|ReentrantLock" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 thread safety" >&2
+        fi
+        # 限流参数可配置 (yml)
+        if grep -rn "rate\|capacity\|refill\|token" src/main/resources/application.yml 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 rate config in yml" >&2
+        fi
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    07-jwt-auth)
+        # 安全过滤器
+        if grep -rn "filter\|Interceptor\|OncePerRequest" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 auth filter/interceptor" >&2
+        fi
+        # 角色权限分离
+        if grep -rn "ROLE_\|hasRole\|hasAuthority\|ADMIN\|USER" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 role-based access" >&2
+        fi
+        # 分层完整 (controller+service+security config)
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    08-refactor-layers)
+        # Controller 纯净 (无数据访问)
+        if ! find src/main -path "*/controller/*" -exec grep -l "ConcurrentHashMap\|AtomicLong\|Map<" {} \; 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 controller purity" >&2
+        fi
+        # @Repository 层抽取
+        if grep -rn "@Repository" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 repository extraction" >&2
+        fi
+        # 分层完整 (controller+service+repo)
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        RP=$(find src/main -path "*/repository/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ] && [ "$RP" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 full layered architecture" >&2
+        fi
+        ;;
+    09-file-upload)
+        # 异步处理
+        if grep -rn "@Async\|TaskExecutor\|ThreadPool\|CompletableFuture" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 async processing" >&2
+        fi
+        # 错误重试
+        if grep -rn "retry\|Retryable\|重试\|catch\|error.*log" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 error handling/retry" >&2
+        fi
+        # 分层完整 (controller+service)
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    10-nplusone-fix)
+        # JOIN FETCH 正确使用
+        if grep -rn "JOIN FETCH\|@EntityGraph\|fetch.*join" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 JOIN FETCH quality" >&2
+        fi
+        # 无额外字段 (API 兼容)
+        if ! grep -rn "userName\|getUserName\|user_name" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 API response preserved" >&2
+        fi
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        RP=$(find src/main -path "*/repository/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ] && [ "$RP" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    11-concurrent-booking)
+        # 乐观锁实现
+        if grep -rn "@Version" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 @Version optimistic lock" >&2
+        fi
+        # 冲突重试
+        if grep -rn "@Retryable\|retry\|重试\|OptimisticLockException" src/main --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 retry on conflict" >&2
+        fi
+        CT=$(find src/main -path "*/controller/*" -name "*.java" 2>/dev/null | wc -l)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        RP=$(find src/main -path "*/repository/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$CT" -gt 0 ] && [ "$SV" -gt 0 ] && [ "$RP" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 layered architecture" >&2
+        fi
+        ;;
+    12-flaky-test)
+        # Clock 注入最佳实践
+        if grep -rn "Clock" src/main --include="*.java" 2>/dev/null | grep -v "import" | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 Clock injection" >&2
+        fi
+        # 测试多时区覆盖
+        if grep -rn "UTC\|Asia/Shanghai\|America/New_York\|ZoneId" src/test --include="*.java" 2>/dev/null | grep -q .; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 multi-timezone test coverage" >&2
+        fi
+        # 分层 (service+repo 即可，本任务无 controller)
+        SV=$(find src/main -path "*/service/*" -name "*.java" 2>/dev/null | wc -l)
+        RP=$(find src/main -path "*/repository/*" -name "*.java" 2>/dev/null | wc -l)
+        if [ "$SV" -gt 0 ] && [ "$RP" -gt 0 ]; then
+            QUALITY_SCORE=$((QUALITY_SCORE + 5)); echo "  +5 service+repo architecture" >&2
+        fi
+        ;;
+    *)
+        echo "  (no task-specific quality checks)" >&2
+        ;;
+esac
 
 SCORE=$((SCORE + QUALITY_SCORE))
 
