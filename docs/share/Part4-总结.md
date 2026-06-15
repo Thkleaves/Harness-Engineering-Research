@@ -58,9 +58,9 @@ HarnessForge          Superpowers            agent-harness-kit
 
 ### 关于 Superpowers 的得分
 
-Superpowers 在本次评测中总分与 Baseline 持平（1045），但过程评测揭示了原因：自动评测中 Agent 被禁止提问，brainstorming 退化成了自问自答。补做的交互实验证明，允许用户参与后架构决策完全不同（随机码 vs 自增ID，有幂等 vs 无幂等）。
+Superpowers 在本次评测中总分与 Baseline 持平（1045）。后续检查会话日志发现 Agent 平均只调用了 3-4 个技能（14 个可选），关键技能（TDD、review）在部分任务上被跳过。**CLAUDE.md 文本指令的遵从率有限——Agent 自主选择哪些技能"值得用"。**
 
-另外 Superpowers 的 spec/plan 文档产出是跨会话的记忆——单次评测测不出这个价值，但在多轮迭代和长期维护中会逐渐显现。
+过程评测进一步证实了交互的价值：允许用户参与后架构决策完全不同。wow-harness 的过程评测则展示了另一条路线——交互不改变架构，但锁定修复范围，每个改动有 spec 可追溯。
 
 ---
 
