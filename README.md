@@ -88,16 +88,17 @@ Harness/
 
 ## 🔑 核心结论
 
-### 1. 量化评测：Gstack 最优，Superpowers = Baseline
+### 1. 量化评测：Gstack 最优，wow-harness 紧随
 
 | Provider | 总分 | 平均分 | 满分次数 |
 |----------|:---:|:---:|:---:|
 | **Gstack** | **1090** | **90.8** | 2 |
+| **wow-harness** | **1085** | **90.4** | 2 |
 | OpenSpec | 1065 | 88.8 | 2 |
 | Baseline（裸Agent） | 1045 | 87.1 | 2 |
 | Superpowers | 1045 | 87.1 | 2 |
 
-- Gstack 的角色分工（CEO → Engineer → QA → DevOps）比 Superpowers 的严格流程（brainstorming → plan → TDD → review）更有效
+- Gstack 的角色分工（CEO → Engineer → QA → DevOps）比严格流程更有效；wow-harness 硬约束 + 治理框架仅差 5 分
 - Superpowers 流程最繁重但得分与裸 Agent 持平——**流程步骤多 ≠ 质量好**
 - 任务难度越大，Harness 价值越高（L4 中 Gstack 在 N+1 修复上领先 Baseline 25 分）
 

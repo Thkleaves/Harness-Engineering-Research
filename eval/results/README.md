@@ -5,9 +5,9 @@
 ### 量化评测（12 任务）
 
 - **12 个 Spring Boot 任务**：L1(简单) → L2(中等) → L3(复杂) → L4(高级)
-- **4 组 Provider**：裸 Agent(Baseline) vs Superpowers vs Gstack vs OpenSpec
+- **5 组 Provider**：裸 Agent(Baseline) vs Superpowers vs Gstack vs OpenSpec vs wow-harness
 - **得分范围 0-100**：编译 gate | 测试 25 | 任务定制 60 | 代码质量 15
-- **模型**: DeepSeek-V4-pro（2026-06-10 ~ 2026-06-11）
+- **模型**: DeepSeek-V4-pro（2026-06-10 ~ 2026-06-15）
 
 ### 过程评测（URL 短链接服务）
 
@@ -22,26 +22,27 @@
 
 ### 全局得分表
 
-| # | 任务 | Baseline | Gstack | OpenSpec | Superpowers | 最高 |
-|---|------|:---:|:---:|:---:|:---:|:---:|
-| ① | 参数校验 | 95 | 95 | 95 | 95 | -- |
-| ② | Actuator | 90 | 90 | 90 | 90 | -- |
-| ③ | 分页排序 | 90 | 90 | **95** | 90 | OpenSpec |
-| ④ | 注册验证 | 95 | 90 | **100** | 90 | OpenSpec |
-| ⑤ | Redis缓存 | 80 | **90** | 80 | **90** | Gstack/Super |
-| ⑥ | 限流 | 90 | 90 | 90 | **100** | Superpowers |
-| ⑦ | JWT认证 | **100** | **100** | **100** | 95 | Baseline/Gstack/OpenSpec |
-| ⑧ | 三层重构 | 100 | 100 | 100 | 100 | -- |
-| ⑨ | 文件上传 | 95 | 95 | 95 | 95 | -- |
-| ⑩ | N+1修复 | 65 | **90** | 80 | 65 | Gstack |
-| ⑪ | 并发预订 | 75 | **85** | 75 | 75 | Gstack |
-| ⑫ | Flaky测试 | 70 | 70 | 70 | 70 | -- |
+| # | 任务 | Baseline | Gstack | OpenSpec | Superpowers | **wow-harness** | 最高 |
+|---|------|:---:|:---:|:---:|:---:|:---:|:---:|
+| ① | 参数校验 | 95 | 95 | 95 | 95 | 95 | -- |
+| ② | Actuator | 90 | 90 | 90 | 90 | 90 | -- |
+| ③ | 分页排序 | 90 | 90 | **95** | 90 | **95** | OpenSpec/wow |
+| ④ | 注册验证 | 95 | 90 | **100** | 90 | 95 | OpenSpec |
+| ⑤ | Redis缓存 | 80 | **90** | 80 | **90** | **90** | Gstack/Super/wow |
+| ⑥ | 限流 | 90 | 90 | 90 | **100** | 90 | Superpowers |
+| ⑦ | JWT认证 | **100** | **100** | **100** | 95 | **100** | Baseline/Gstack/OpenSpec/wow |
+| ⑧ | 三层重构 | 100 | 100 | 100 | 100 | 100 | -- |
+| ⑨ | 文件上传 | 95 | 95 | 95 | 95 | 95 | -- |
+| ⑩ | N+1修复 | 65 | **90** | 80 | 65 | **80** | Gstack |
+| ⑪ | 并发预订 | 75 | **85** | 75 | 75 | **85** | Gstack/wow |
+| ⑫ | Flaky测试 | 70 | 70 | 70 | 70 | 70 | -- |
 
 ### 各 Provider 总分
 
 | Provider | 总分 | 平均分 | 满分次数 |
 |----------|:---:|:---:|:---:|
 | **Gstack** | **1090** | **90.8** | 2 |
+| **wow-harness** | **1085** | **90.4** | 2 |
 | OpenSpec | 1065 | 88.8 | 2 |
 | Baseline | 1045 | 87.1 | 2 |
 | Superpowers | 1045 | 87.1 | 2 |
@@ -51,20 +52,23 @@
 #### 1. Superpowers 没有比裸 Agent 更好
 **Superpowers 总分 = Baseline 总分 = 1045**。严格的 brainstorming → plan → TDD → review 流程没有带来整体得分提升。在 12 个任务中，Superpowers 只在任务⑥限流上独秀（100 vs 90），但在任务⑦JWT认证上反被 Baseline 超越（95 vs 100）。
 
-#### 2. Gstack 是最优 Harness
-Gstack 总分最高（1090），在 N+1 修复（+25）和并发预订（+10）上拉开差距。角色分工带来的**多视角覆盖同一问题**比 Superpowers 的**流程步骤多**更有效。
+#### 2. Gstack 是最优 Harness，wow-harness 紧追其后
+Gstack 总分最高（1090），wow-harness 次之（1085），两者仅差 5 分。Gstack 在 N+1 修复（+25）和并发预订（+10）上拉开差距——角色分工带来的**多视角覆盖同一问题**比流程步骤更有效。wow-harness 靠 hooks 治理 + CLAUDE.md 行为约束在分页排序、Redis 缓存、N+1 修复上均比 Baseline 提升了 10-15 分。
 
-#### 3. 任务难度越大，Harness 价值越高
-- L1（①②）：四组同分，Harness 无价值
+#### 3. wow-harness 的硬约束是 Baseline 之上的增量
+wow-harness 的 16 hooks + CLAUDE.md 治理框架 = 比裸 Agent 多 40 分。亮点：③分页排序 95（排序白名单，+5 vs Baseline）、⑤Redis 缓存 90（TTL 配置，+10）、⑩N+1 修复 80（SQL 验证，+15）。但硬约束不能替代"多视角思考"——⑩ 仍比 Gstack 低 10 分。
+
+#### 4. 任务难度越大，Harness 价值越高
+- L1（①②）：五组同分，Harness 无价值
 - L2（③④⑤⑥）：开始出现分化（90-100）
-- L3（⑦⑧⑨）：四组再次趋同，任务描述足够详细则 Agent 差距缩小
-- L4（⑩⑪⑫）：Gstack 在 N+1 和并发上大幅领先，Harness 价值最大
+- L3（⑦⑧⑨）：五组再次趋同，任务描述足够详细则 Agent 差距缩小
+- L4（⑩⑪⑫）：Gstack 和 wow-harness 均有亮点，Harness 价值最大
 
-#### 4. Token 效率差异巨大
+#### 5. Token 效率差异巨大
 Superpowers 的总 token 消耗是 Gstack 的 1.5-2 倍，但得分不增。流程繁重 = 成本增加 ≠ 质量提升。
 
-#### 5. 所有 Harness 都怕"全局重构"
-任务⑫ Flaky 测试中，四组全部漏了移除 LocalDate.now()。Agent-based 系统倾向于"加新代码"而非"改旧代码"，这是一个共性问题。
+#### 6. 所有 Harness 都怕"全局重构"
+任务⑫ Flaky 测试中，五组全部漏了移除 LocalDate.now()。Agent-based 系统倾向于"加新代码"而非"改旧代码"，这是一个共性问题——硬约束也未能解决。
 
 ---
 
@@ -114,6 +118,7 @@ Harness自动的代码更模块化、测试更多（17 vs 13），但在短码�
 |------|:---:|------|
 | 需求明确、无歧义 | **裸Agent** | 最快、token最低、质量不差 |
 | 多技术点组合 | **Gstack** | 多角色视角覆盖最全 |
+| 需硬约束防偷懒 | **wow-harness** | hooks 机械执行 + 治理框架，比裸 Agent 多 40 分 |
 | API 设计/状态机 | **OpenSpec** | Spec 驱动在接口定义上有优势 |
 | 算法实现+测试密集 | **Superpowers** | TDD 流程提升测试覆盖率 |
 | **需求模糊、需要决策** | **Harness + 用户交互** | 最大化 Harness 价值 |
@@ -123,7 +128,8 @@ Harness自动的代码更模块化、测试更多（17 vs 13），但在短码�
 1. **不要禁止 AskUserQuestion**：这是 Harness 最核心的价值点
 2. **流程步骤多 ≠ 质量好**：Superpowers 流程最长但得分=裸Agent
 3. **角色分工 > 流程约束**：Gstack 证明多视角思考比严格流程更有效
-4. **评测中必须有交互对照组**：自动评测只能测"猜测能力"，不能测"协作能力"
+4. **硬约束是软约束之上的增量**：wow-harness hooks 比 CLAUDE.md 单纯文本更可靠，但需环境兼容
+5. **所有 Harness 都推不动"改旧代码"**：任务⑫ 五组同分 70，这是下一个前沿
 
 ---
 

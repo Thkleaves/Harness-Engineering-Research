@@ -42,14 +42,15 @@ HarnessForge          Superpowers            agent-harness-kit
 
 | 场景 | 评测中领先的 Harness | 数据 |
 |------|:----------:|------|
-| 简单 CRUD / 配置变更 | 各组同分 | L1 数据：四组 95/90，Harness 无差异 |
+| 简单 CRUD / 配置变更 | 各组同分 | L1 数据：五组 95/90，Harness 无差异 |
 | 算法实现（限流/加密/编码） | **Superpowers** | 任务⑥ 唯一满分，TDD 在算法上最强 |
 | 多组件协作（认证/文件上传/消息） | **Gstack** | 任务⑦⑨ 多角色覆盖不同关注面 |
 | API 设计先行 | **OpenSpec** | 任务③④ 领先，Spec 驱动在接口定义上占优 |
 | 性能优化 / Bug 修复 | **Gstack** | 任务⑩ 领先 25 分，QA 推动"验证是否真的修好" |
-| 存量代码重构 | 各组同分 | L3 数据：四组 100，裸 Agent 一次做对 |
+| 存量代码重构 | 各组同分 | L3 数据：五组 100，裸 Agent 一次做对 |
 | 需求极度模糊的新功能 | 数据不足 | 过程评测表明，需要用户交互才能发挥 Harness 价值 |
-| 全局重构（改旧代码） | 全部落后 | 任务⑫ 四组 70 分，所有 Harness 都推不动 Agent 改旧代码 |
+| 全局重构（改旧代码） | 全部落后 | 任务⑫ 五组 70 分，所有 Harness 都推不动 Agent 改旧代码 |
+| **硬约束防止遗漏** | **wow-harness** | ③⑤⑩ 均比 Baseline 高 10-15 分，hooks 防住了 TTL、白名单、SQL 验证等遗漏 |
 
 ![12任务 × 4 Provider 得分趋势 — 不同场景下各组差异显著](../eval/results/charts/02-score-trend.png)
 

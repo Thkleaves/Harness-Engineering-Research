@@ -20,19 +20,22 @@ os.makedirs(OUT_DIR, exist_ok=True)
 COLORS = {
     'baseline':    '#94a3b8',  # slate gray — bare/minimal
     'gstack':       '#22c55e',  # green — winner
+    'wow-harness':  '#a855f7',  # purple — hard constraints
     'openspec':     '#3b82f6',  # blue
     'superpowers':  '#f59e0b',  # amber
 }
-PROVIDER_ORDER = ['baseline', 'gstack', 'openspec', 'superpowers']
+PROVIDER_ORDER = ['baseline', 'gstack', 'wow-harness', 'openspec', 'superpowers']
 PROVIDER_LABELS = {
     'baseline': 'Baseline\n(裸Agent)',
     'gstack': 'Gstack',
+    'wow-harness': 'wow-harness',
     'openspec': 'OpenSpec',
     'superpowers': 'Superpowers',
 }
 PROVIDER_LABELS_SHORT = {
     'baseline': 'Baseline',
     'gstack': 'Gstack',
+    'wow-harness': 'wow-harness',
     'openspec': 'OpenSpec',
     'superpowers': 'Superpowers',
 }
@@ -91,14 +94,17 @@ ax.spines['right'].set_visible(False)
 ax.yaxis.set_major_locator(mticker.MultipleLocator(100))
 ax.grid(axis='y', alpha=0.3, linestyle='--')
 
-# Highlight Gstack
+# Highlight Gstack (winner)
 bars[1].set_edgecolor('#166534')
 bars[1].set_linewidth(2.5)
+# Highlight wow-harness (close second)
+bars[2].set_edgecolor('#7c3aed')
+bars[2].set_linewidth(2)
 
-# Add gap annotation between Gstack and Superpowers/Baseline
-ax.annotate('', xy=(3, 1045), xytext=(1, 1090),
-            arrowprops=dict(arrowstyle='<->', color='#ef4444', lw=1.5, shrinkA=0, shrinkB=0))
-ax.text(2, 1070, '差距 45 分', ha='center', fontsize=10, color='#ef4444', fontweight='bold')
+# Gap: Gstack vs wow-harness
+ax.annotate('', xy=(2, 1085), xytext=(1, 1090),
+            arrowprops=dict(arrowstyle='<->', color='#7c3aed', lw=1.2, shrinkA=0, shrinkB=0))
+ax.text(1.5, 1098, '5', ha='center', fontsize=9, color='#7c3aed', fontweight='bold')
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT_DIR, '01-total-scores.png'), dpi=150, bbox_inches='tight')

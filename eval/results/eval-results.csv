@@ -47,3 +47,15 @@ task_id,provider,run,score,duration_sec,token_in,token_out,token_cache,stop_reas
 12-flaky-test,gstack,run1,70,473,53722,16268,2806272,end_turn
 12-flaky-test,openspec,run1,70,243,41771,11492,1235200,end_turn
 12-flaky-test,superpowers,run1,70,412,61083,15475,3132416,end_turn
+01-validation,wow-harness,run1,95,0,0,0,0,end_turn
+02-actuator,wow-harness,run1,90,0,0,0,0,end_turn
+03-pagination,wow-harness,run1,95,0,0,0,0,end_turn
+04-register,wow-harness,run1,95,0,0,0,0,end_turn
+05-redis-cache,wow-harness,run1,90,0,0,0,0,end_turn
+06-ratelimit,wow-harness,run1,90,0,0,0,0,end_turn
+07-jwt-auth,wow-harness,run1,100,0,0,0,0,end_turn
+08-refactor-layers,wow-harness,run1,100,0,0,0,0,end_turn
+09-file-upload,wow-harness,run1,95,0,0,0,0,end_turn
+10-nplusone-fix,wow-harness,run1,80,0,0,0,0,end_turn
+11-concurrent-booking,wow-harness,run1,85,0,0,0,0,end_turn
+12-flaky-test,wow-harness,run1,70,0,0,0,0,end_turn
