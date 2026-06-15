@@ -119,13 +119,18 @@ fig, ax = plt.subplots(figsize=(14, 6))
 scores = by_task('score')
 x = np.arange(len(TASKS))
 
+# Dodge offsets — prevent marker overlap when scores are identical
+DODGE = {p: (i - (len(PROVIDERS)-1)/2) * 0.08 for i, p in enumerate(PROVIDERS)}
+MARKERS = {p: m for p, m in zip(PROVIDERS, ['o', 's', 'D', '^', 'v'])}
+
 for p in PROVIDERS:
-    ax.plot(x, scores[p], marker='o', markersize=8, linewidth=2.2,
+    x_dodged = x + DODGE[p]
+    ax.plot(x_dodged, scores[p], marker=MARKERS[p], markersize=7, linewidth=2.0,
             color=COLORS[p], label=PROVIDER_LABELS_SHORT[p], zorder=5,
-            markeredgecolor='white', markeredgewidth=1)
+            markeredgecolor='white', markeredgewidth=0.8, alpha=0.9)
 
 # Fill the gap between Gstack and others
-ax.fill_between(x, scores['gstack'], scores['baseline'], alpha=0.08, color=COLORS['gstack'])
+ax.fill_between(x, scores['gstack'], scores['baseline'], alpha=0.06, color=COLORS['gstack'])
 
 ax.set_xticks(x)
 ax.set_xticklabels(TASK_NUMS, fontsize=12)
