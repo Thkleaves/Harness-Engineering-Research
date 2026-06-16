@@ -59,3 +59,4 @@ task_id,provider,run,score,duration_sec,token_in,token_out,token_cache,stop_reas
 10-nplusone-fix,wow-harness,run1,80,0,0,0,0,end_turn
 11-concurrent-booking,wow-harness,run1,85,0,0,0,0,end_turn
 12-flaky-test,wow-harness,run1,70,0,0,0,0,end_turn
+01-validation,wow-harness,1,100,179,43928,9843,1516032,end_turn
